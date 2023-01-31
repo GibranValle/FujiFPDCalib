@@ -58,6 +58,14 @@ def text(minutes, exposures, name):
     print('please wait...')
 
 
+def fullCalibration():
+    print('starting full calibration...')
+    offsetCalib()
+    defectCalib()
+    pixedDefectCalib()
+    shadingCalib()
+    uniformityCalib()
+
 def offsetCalib():
     text(7, 0, 'offset')
 
@@ -68,14 +76,22 @@ def defectCalib():
 
 def pixedDefectCalib():
     text(3, 1, 'pixel-defect')
+    serialCommunication("O4")
 
 
 def shadingCalib():
     text(20, 44, 'shading')
+    serialCommunication("O5")
 
 
 def uniformityCalib():
     text(10, 7, 'x-ray uniformity')
+    serialCommunication("O6")
+
+
+def mAVerification():
+    text(5, 1, 'mA Verification')
+    serialCommunication("O8")
 
 
 isRunning = True
@@ -84,38 +100,26 @@ while isRunning:
     print('Available options')
     print(' 1) Full calibration\n 2) Offset \n 3) Defect')
     print(' 4) Pixel-defect \n 5) Shading \n 6) X-ray uniformity')
-    print(' 7) test communication')
+    print(' 7) Test communication')
+    print(' 8) mA Verification')
     print(' 0) Exit program\n')
     selection = input('selected: ')
 
     if selection == '1':
-        print('starting full calibration...')
-        offsetCalib()
-        defectCalib()
-        pixedDefectCalib()
-        shadingCalib()
-        uniformityCalib()
-
+        fullCalibration()
     elif selection == '2':
         offsetCalib()
-
     elif selection == '3':
         defectCalib()
-
     elif selection == '4':
         pixedDefectCalib()
-        serialCommunication("O4")
-
     elif selection == '5':
         shadingCalib()
-        serialCommunication("O5")
-
     elif selection == '6':
         uniformityCalib()
-        serialCommunication("O6")
-
     elif selection == '7':
         serialCommunication("O7")
-
+    elif selection == '8':
+        mAVerification()
     elif selection == '0':
         isRunning = False
