@@ -8,7 +8,7 @@ int sensorValue = 0;        // value read from the pot
 
 // timer
 const int MAX_TIME_SHORT = 10;
-const int MAX_TIME_LONG = 400;
+const int MAX_TIME_LONG = 450;
 int maxTime = 0;
 int countTime = 0;
 

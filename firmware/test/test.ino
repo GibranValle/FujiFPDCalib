@@ -16,7 +16,6 @@ void setup() {
   TCCR1B |= (1 << CS10);   // 256 PRESCALE
   //TIMSK1 |= (1 << OCIE1A);  //enable timer
   interrupts();
-  Serial.println("ONLINE");
 }
 
 void loop() {

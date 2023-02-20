@@ -1,9 +1,16 @@
 # test started 29/01/2023
 # final modification @ 14/02/2023
-from helper import offsetCalib, defectCalib
-from comHelper import mAVerification, uniformityCalib, shadingCalib, pixedDefectCalib, testCommunication
-from comHelper import initSerial, ADCtest
+
+from calibrations.noExposureCalib import offsetCalib, defectCalib
+from calibrations.pixelDefectCalibration import pixedDefectCalib
+from calibrations.shadingCalibration import shadingCalib
+from calibrations.uniformityCalibration import uniformityCalib
+from util.serialCOM import initSerial
+from calibrations.verification import mAVerification, testCommunication, ADCtest
+
 import os
+
+
 isRunning = True
 
 while isRunning:
@@ -16,6 +23,7 @@ while isRunning:
     print(' 8) ADC Reading TEST')
     print(' 0) Exit program\n')
     selection = input('selected: ')
+
     os.system('cls')
     arduino = initSerial()
     if selection == '1':
@@ -29,7 +37,7 @@ while isRunning:
     elif selection == '5':
         uniformityCalib()
     elif selection == '6':
-        mAVerification()
+        mAVerification(arduino)
     elif selection == '7':
         testCommunication(arduino)
     elif selection == '8':
