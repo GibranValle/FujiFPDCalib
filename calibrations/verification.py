@@ -1,7 +1,7 @@
 import time
 
 from readConfigFile import getUltraLong, getMaxCount, getCountDown
-from util.serialCOM import communicate, lightStatus, lightValue
+from util.serialCOM import communicate, isLightOn, lightValue
 
 
 def mAVerification(arduino, waitTime=getCountDown()):
@@ -10,7 +10,7 @@ def mAVerification(arduino, waitTime=getCountDown()):
     print("Estimated duration of exposure 5min")
     print("Requesting for exposure...")
     # VERIFY CONNECTION BEFORE COUNTDOWN
-    dataLost = communicate("T", "T", 5, arduino)
+    dataLost = communicate("T", "T", 1, arduino)
     if dataLost:
         print("Communication error")
         return
@@ -23,20 +23,8 @@ def mAVerification(arduino, waitTime=getCountDown()):
     print("\nPerforming LONG EXPOSURE...")
     count = 0
     for j in range(1, getUltraLong()):
-
-        if count > getMaxCount():
-            print("Request to finish exposure before countdown")
-            dataLost = communicate("X", "X", 5, arduino)
-            if not dataLost:
-                break
-        status = lightStatus("M", 1000, 1, arduino)
-
-        if status == 'Off':
-            print("\rSTAND BY", end='')
-            count += 1
-        else:
-            print("\rUNDER EXPOSURE " + str(j) + " s", end='')
-
+        print("\rUNDER EXPOSURE " + str(j) + " s", end='')
+        time.sleep(1)
     print("Exposure done")
 
 
@@ -49,7 +37,9 @@ def testCommunication(arduino):
     print("Communication error")
 
 
-def ADCtest(arduino):
+def ADCtest(arduino, samples=20):
     print("ADC Reading test selected")
-    value = lightValue("M", 1, arduino)
-    print("Value: "+str(value))
+    for i in range(samples):
+        value = lightValue(1, arduino)
+        print("Value: "+str(value))
+        time.sleep(0.25)

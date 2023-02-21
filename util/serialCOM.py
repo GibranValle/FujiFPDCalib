@@ -1,12 +1,12 @@
 import serial
 import serial.tools.list_ports
-from readConfigFile import getPort
+from readConfigFile import getPort, getThreshold
 import time
 
 
 def initSerial():
     port = getPort()
-    arduino = serial.Serial('COM'+port, 9600)
+    arduino = serial.Serial('COM' + port, 9600)
     return arduino
 
 
@@ -16,7 +16,7 @@ def advancedSerialInit():
 
     if connectPort != '':
         arduino = serial.Serial(connectPort, 9600)
-        print('Connected to '+connectPort)
+        print('Connected to ' + connectPort)
     else:
         print('Connection Issue')
 
@@ -34,8 +34,8 @@ def communicate(message, response, timeout, device, prescale=20):
         device.open()
     device.write(f"{message}\n".encode())
 
-    for i in range(1, timeout*prescale):
-        time.sleep(1/prescale)
+    for i in range(1, timeout * prescale):
+        time.sleep(1 / prescale)
         if device.in_waiting:
             data = device.readline().decode('ascii').rstrip()
             if data == response:
@@ -45,54 +45,62 @@ def communicate(message, response, timeout, device, prescale=20):
     return dataLost
 
 
-def lightStatus(message, threshold, timeout, device, prescale=50):
-    # TODO MORE GENERIC FORM NOW WORKING WITH "M:000"
+def wait4light(arduino, message, waitTime, litWanted=True, samples=5):
     """
-    :param message: message string or char to send
+    Count ratio of sensed light
+    :param litWanted: if true will break if ratio is 1
+    :param waitTime: in secs
+    :param arduino: serial device
+    :param message: stand-by message during waiting
+    :param samples: number of samples per sec
+    """
+    isReady = 0
+    for j in reversed(range(0, waitTime)):
+        if isReady >= 2:
+            print(f"\rWaited time={j}s", end='')
+            print(f"\rReady to continue light ratio={round(ratio, 2)}")
+            break
+        litCount = 1
+        print(f"\r{message}" + str(waitTime-j)+' s', end='')
+        for k in range(samples):
+            time.sleep(1 / samples)
+            isLit = isLightOn(arduino, getThreshold())
+            litCount = litCount + 1 if isLit else litCount
+        ratio = litCount / (samples+1)
+        if litWanted and ratio >= 0.8:
+            isReady += 1
+        if not litWanted and ratio <= 0.4:
+            isReady += 1
+
+
+def isLightOn(arduino, threshold):
+    """
+    :param arduino: value to compare
     :param threshold: value to compare
-    :param timeout: time in secs to listen
-    :param device: pyserial object ARDUINO
     """
-    lightStatus = 'On'
-
-    if not device.isOpen():
-        device.open()
-    device.write(f"{message}\n".encode())
-
-    for i in range(1, timeout*prescale):
-        time.sleep(1/prescale)
-        if device.in_waiting:
-            # M1 M10 M100 M1000
-            data = device.readline().decode('ascii').rstrip()
-            header = data[0]
-            value = int(data[2:])
-            if value < threshold:
-                lightStatus = "Off"
-    device.close()
-    return lightStatus
+    status = True if lightValue(1, arduino) > threshold else False
+    return status
 
 
-def lightValue(message, timeout, device, prescale=50):
+def lightValue(timeout, device, prescale=100):
     # TODO MORE GENERIC FORM NOW WORKING WITH "M:000"
     """
-    :param message: message string or char to send
     :param timeout: time in secs to listen
     :param device: pyserial object ARDUINO
     """
     if not device.isOpen():
         device.open()
-    device.write(f"{message}\n".encode())
+    device.write("M\n".encode())
 
-    for i in range(1, timeout*prescale):
-        time.sleep(1/prescale)
+    for i in range(1, timeout * prescale):
+        time.sleep(1 / prescale)
         if device.in_waiting:
-            # M1 M10 M100 M1000
+            # M:1 M:10 M:100 M:1000
             data = device.readline().decode('ascii').rstrip()
             header = data[0]
             value = int(data[2:])
-    device.close()
-    return value
-
+            device.close()
+            return value
 
 
 def getPorts():

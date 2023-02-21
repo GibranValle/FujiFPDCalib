@@ -67,7 +67,7 @@ void serialEvent() {
 ISR(TIMER1_COMPA_vect) {
   countTime++;
   if (countTime > maxTime) {
-    Serial.println("EXPOSURE TIME EXCEDED TURNING OFF...");
+    Serial.println("E");
     endExposure();
     TIMSK1 = !TIMSK1 & (1 << OCIE1A);  //disable timer
   }

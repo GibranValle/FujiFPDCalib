@@ -23,7 +23,7 @@ void performShortExposure() {
   countTime = 0;
   maxTime = MAX_TIME_SHORT;
   TIMSK1 |= (1 << OCIE1A);  //enable timer
-  Serial.println("STARTING EXPOSURE");
+  Serial.println("S");
   startExposure();
 }
 
@@ -32,6 +32,6 @@ void performLongxposure() {
   countTime = 0;
   maxTime = MAX_TIME_LONG;
   TIMSK1 |= (1 << OCIE1A);  //enable timer
-  Serial.println("STARTING LONG EXPOSURE");
+  Serial.println("L");
   startExposure();
 }

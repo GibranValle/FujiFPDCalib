@@ -34,10 +34,63 @@ def typeText(string):
 
 
 def openRUPcTools():
+    time.sleep(0.5)
     pressWindows()
+    time.sleep(0.5)
     typeTextEnter("cmd")
+    time.sleep(0.5)
     typeTextEnter(variables.RUPCTOOL_DIR)
+    time.sleep(0.5)
     typeTextEnter(variables.RUPCTOOL_EXE)
+    time.sleep(0.5)
+
+
+def closeRUPcTools():
+    time.sleep(0.5)
+    moveCursorandClick(variables.RUPCTOOL_CLOSE)
+    time.sleep(0.5)
+
+
+def openMUTLCalibMenu():
+    time.sleep(0.5)
+    moveCursorandClick(variables.MCU0)
+    time.sleep(0.5)
+    moveCursorandClick(variables.MUTL)
+    time.sleep(0.5)
+    moveCursorandClick(variables.RIGHT_OPTIONS)
+    time.sleep(0.5)
+    moveCursorandClick(variables.MUTL_CALIBRATION)
+    time.sleep(0.5)
+
+
+def closeMUTLCalibMenu():
+    time.sleep(0.5)
+    moveCursorandClick(variables.MUTL_CALIBRATION_CLOSE)
+    time.sleep(0.5)
+
+
+def runOffsetCalibration():
+    time.sleep(0.5)
+    moveCursorandClick(variables.OFFSET)
+    time.sleep(0.5)
+    moveCursorandClick(variables.CALIB_FPD)
+    time.sleep(0.5)
+    moveCursorandClick(variables.CALIB_FPD)
+    time.sleep(0.5)
+    moveCursorandClick(variables.FIELD_CALIBRATION)
+    time.sleep(0.5)
+
+
+def runDefectCalibration():
+    time.sleep(0.5)
+    moveCursorandClick(variables.DEFECTE)
+    time.sleep(0.5)
+    moveCursorandClick(variables.CALIB_FPD)
+    time.sleep(0.5)
+    moveCursorandClick(variables.CALIB_FPD)
+    time.sleep(0.5)
+    moveCursorandClick(variables.FIELD_CALIBRATION)
+    time.sleep(0.5)
 
 
 def deleteMU0():
@@ -77,20 +130,6 @@ def addBPY():
     moveCursorandClick(variables.PING)
 
 
-def openFPDCalibMenu():
-    moveCursorandClick(variables.MCU0)
-    moveCursorandClick(variables.MUTL)
-    moveCursorandClick(variables.PING)
-    moveCursorandClick(variables.RIGHT_OPTIONS)
-    moveCursorandClick(variables.MUTL_CALIBRATION)
-
-
-def runOffsetCalibration():
-    moveCursorandClick(variables.OFFSET)
-    changeTab()
-    moveCursorandClick(variables.FIELD_CALIBRATION)
-    print("Wait ")
-    time.sleep()
 
 
 

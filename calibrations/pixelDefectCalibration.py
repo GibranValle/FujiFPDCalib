@@ -1,26 +1,26 @@
-import time
+from util.serialCOM import communicate, wait4light
 
 
-def pixedDefectCalib(arduino):
+def pixedDefectCalib(arduino, exposures=1):
     print("Pixel defect calibration selected")
     print("Estimated waiting time: 5 mins")
-    print("Exposures required: 1")
-    print("Request for exposure 1 of 1\n")
-    # send message
+    print("Exposures required: "+exposures)
+    # exposures loop
+    print(f"\nRequesting exposure {i} of {exposures}")
+    dataLost = communicate("S", "S", 1, arduino)
+    if dataLost:
+        print("Communication error")
+        return
 
-    if not arduino.isOpen():
-        arduino.open()
+    # wait 10 secs OR wait light to turn off
+    wait4light(arduino, "Under exposure...", 10, False)
 
-    arduino.write("E\n".encode())
-    # wait 5 secs and stop
-    for i in range(1, 5):
-        if i == 3:
-            arduino.write("X\n".encode())
-        if arduino.in_waiting:
-            data = arduino.readline().decode('ascii')
-            print(data, end='')
-        time.sleep(1)
+    print("\nRequesting end of exposure\n")
+    dataLost = communicate("X", "X", 1, arduino)
+    if dataLost:
+        print("Communication error")
+        return
+    print("Exposure done")
 
-    arduino.close()
-    print("\nPlease verify AWS")
-    print("__________________________________________________________")
+    print("\nCalibration completed successfully please check AWS")
+    print("----------------------------------------------------")

@@ -7,8 +7,8 @@ const int analogInPin = A2;  // Analog input pin that the potentiometer is attac
 int sensorValue = 0;        // value read from the pot
 
 // timer
-const int MAX_TIME_SHORT = 10;
-const int MAX_TIME_LONG = 450;
+const int MAX_TIME_SHORT = 15;
+const int MAX_TIME_LONG = 500;
 int maxTime = 0;
 int countTime = 0;
 
