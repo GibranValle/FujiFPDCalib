@@ -1,25 +1,28 @@
 import time
 import threading
+
+from readConfigFile import isDemoMode
 from util.mouseKeyboard import openRUPcTools, openMUTLCalibMenu, runOffsetCalibration, runDefectCalibration, \
     closeMUTLCalibMenu, closeRUPcTools
 
 isFinished = False
+isDemo = isDemoMode()
 
 
-def offsetCalib(debug=0):
-    global isFinished
+def offsetCalib():
+    global isFinished, isDemo
     print("Offset calibration selected")
     print("Estimated waiting time: 5 mins")
     print("Exposures required: 0")
 
     print("Open RUPcTools")
-    if debug:
+    if not isDemo:
         openRUPcTools()
     print("Open MUTL Calibration window")
-    if debug:
+    if not isDemo:
         openMUTLCalibMenu()
     print("Starting field calibration\n")
-    if debug:
+    if not isDemo:
         runOffsetCalibration()
 
     inputThread = threading.Thread(target=getInput)
@@ -33,29 +36,29 @@ def offsetCalib(debug=0):
         count += 1
 
     print("\nClose MUTL Calibration window")
-    if debug:
+    if not isDemo:
         closeMUTLCalibMenu()
     print("Close RUPcTool")
-    if debug:
+    if not isDemo:
         closeRUPcTools()
 
     print("\n --Calibration complete-- \n")
 
 
-def defectCalib(debug=0):
-    global isFinished
+def defectCalib():
+    global isFinished, isDemo
     print("Defect calibration selected")
     print("Estimated waiting time: 5 mins")
     print("Exposures required: 0")
 
     print("Open RUPcTools")
-    if debug:
+    if not isDemo:
         openRUPcTools()
     print("Open MUTL Calibration window")
-    if debug:
+    if not isDemo:
         openMUTLCalibMenu()
     print("Starting field calibration\n")
-    if debug:
+    if not isDemo:
         runDefectCalibration()
 
     inputThread = threading.Thread(target=getInput)
@@ -69,10 +72,10 @@ def defectCalib(debug=0):
         count += 1
 
     print("\nClose MUTL Calibration window")
-    if debug:
+    if not isDemo:
         closeMUTLCalibMenu()
     print("Close RUPcTool")
-    if debug:
+    if not isDemo:
         closeRUPcTools()
 
     print("\n --Calibration complete-- \n")

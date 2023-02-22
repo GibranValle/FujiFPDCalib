@@ -57,3 +57,9 @@ def getCountDown():
     value = data['COUNTDOWN']
     return value
 
+
+def isDemoMode():
+    data = readIni()
+    value = data['DEMO']
+    boolValue = True if value else  False
+    return boolValue
