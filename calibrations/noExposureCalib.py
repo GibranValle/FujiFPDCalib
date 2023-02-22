@@ -83,7 +83,7 @@ def defectCalib():
 
 def getInput():
     global isFinished
-    selection = input(" --PRESS ANY ENTER TO QUIT-- \n\n")
+    selection = input(" --PRESS ENTER TO QUIT-- \n\n")
     # thread doesn't continue until key is pressed
     isFinished = True
 
