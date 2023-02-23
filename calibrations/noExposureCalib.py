@@ -1,5 +1,5 @@
-import time
 import threading
+import time
 
 from readConfigFile import isDemoMode
 from util.mouseKeyboard import openRUPcTools, openMUTLCalibMenu, runOffsetCalibration, runDefectCalibration, \

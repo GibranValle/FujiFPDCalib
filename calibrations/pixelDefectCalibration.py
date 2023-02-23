@@ -1,4 +1,4 @@
-from util.serialCOM import communicate, wait4light
+from util.serialCOM import wait4light
 
 
 def pixedDefectCalib(arduino, exposures=1):

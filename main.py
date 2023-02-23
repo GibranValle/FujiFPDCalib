@@ -4,11 +4,20 @@ from calibrations.noExposureCalib import offsetCalib, defectCalib
 from calibrations.pixelDefectCalibration import pixedDefectCalib
 from calibrations.shadingCalibration import shadingCalib
 from calibrations.uniformityCalibration import uniformityCalib
-from util.serialCOM import initSerial
-from calibrations.verification import mAVerification, testCommunication, ADCtest
+from calibrations.verification import mAVerification, ADCtest, testCommunication
 import os
+import threading
+from util.serialCOM import startListening, enableSerialEcho
 
+enableSerialEcho()
+
+# use threading for SERIAL COMMUNICATION WITH ARDUINO
+serialThread = threading.Thread(target=startListening)
+serialThread.start()
+
+# use infinite loop for interaction
 isRunning = True
+
 while isRunning:
     print('\nAutomatic MG FPD Calibration script by Gibran Valle FFMX\n')
     print(' 1) Offset \n 2) Defect')
@@ -17,23 +26,22 @@ while isRunning:
     print(' 0) Exit program\n')
     selection = input('selected: ')
     os.system('cls')
-    arduino = initSerial()
     if selection == '1':
-        offsetCalib(debug=1)
+        offsetCalib()
     elif selection == '2':
-        defectCalib(debug=1)
+        defectCalib()
     elif selection == '3':
-        pixedDefectCalib(arduino)
+        pixedDefectCalib()
     elif selection == '4':
-        shadingCalib(arduino)
+        shadingCalib()
     elif selection == '5':
-        uniformityCalib(arduino)
+        uniformityCalib()
     elif selection == '6':
-        mAVerification(arduino)
+        mAVerification()
     elif selection == '7':
-        testCommunication(arduino)
+        testCommunication()
     elif selection == '8':
-        ADCtest(arduino)
+        ADCtest()
     elif selection == '0':
         isRunning = False
-        arduino.close()
+        end
