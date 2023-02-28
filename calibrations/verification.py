@@ -2,7 +2,7 @@ import threading
 import time
 
 from readConfigFile import getUltraLong, getCountDown
-from util.serialCOM import communicate, lightValue
+from util.serialCOM import communicate, readADC
 from util.TimerDelay import setTimerDelay, startTimerDelay, endTimerDelay
 
 
@@ -12,19 +12,19 @@ def mAVerification(waitTime=getUltraLong()):
     print("Estimated duration of exposure: 5min")
     print(" <-- Requesting for exposure -->")
     # VERIFY CONNECTION BEFORE COUNTDOWN
-    comError = communicate("T", "T")
+    comError = communicate("T")
     if comError:
-        return print(" *** COMMUNICATION ERROR ***")
+        return
     print(" >-- Exposure request accepted --< ")
 
     setTimerDelay("STARTING EXPOSURE IN: ", initValue=getCountDown(), finalValue=0)
     startTimerDelay()
 
     # REQUEST FOR LONG EXPOSURE NOW
-    comError = communicate("L", "L")
+    comError = communicate("L")
     if comError:
-        return print(" *** COMMUNICATION ERROR ***")
-    print("\nPerforming LONG EXPOSURE...")
+        return
+    print("\nPERFORMING LONG EXPOSURE...")
 
     # thread for finish task
     inputThread = threading.Thread(target=abortExposure)
@@ -35,18 +35,16 @@ def mAVerification(waitTime=getUltraLong()):
     startTimerDelay()
 
     print(" <-- Requesting end of exposure -->")
-    comError = communicate("X", "X")
+    comError = communicate("X")
     if comError:
-        print(" *** PLEASE END EXPOSURE MANUALLY *** ")
-        return print(" *** COMMUNICATION ERROR ***")
+        return print(" *** PLEASE END EXPOSURE MANUALLY *** ")
     print(" >-- Exposure done --< ")
 
 
 def testCommunication():
     print("Communication test selected")
-    comError = communicate("T", "T")
+    comError = communicate("T")
     if comError:
-        print("Communication error")
         return
     print(" >-- Communication correct <--")
 
@@ -54,7 +52,7 @@ def testCommunication():
 def ADCtest(samples=20):
     print("ADC Reading test selected")
     for i in range(samples):
-        value = lightValue(1)
+        value = readADC()
         print("Value: "+str(value))
         time.sleep(0.25)
 

@@ -1,10 +1,10 @@
+// UPDATED FIRMWARE TO MATCH NEW PCB
 #include "variables.h"
 
 void setup() {
   // initialize serial:
   Serial.begin(9600);
   relayInit();
-  endExposure();
 
   noInterrupts();
   TCCR1A = 0;
@@ -48,9 +48,11 @@ void loop() {
     case 'X':
       endExposure();
       Serial.println("X");
+      TIMSK1 = !TIMSK1 & (1 << OCIE1A);  //disable timer
       break;
 
     case 'T':
+      TIMSK1 = !TIMSK1 & (1 << OCIE1A);  //disable timer
       Serial.println("T");
       break;
   }

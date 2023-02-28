@@ -7,9 +7,7 @@ from calibrations.uniformityCalibration import uniformityCalib
 from calibrations.verification import mAVerification, ADCtest, testCommunication
 import os
 import threading
-from util.serialCOM import startListening, enableSerialEcho
-
-enableSerialEcho()
+from util.serialCOM import startListening
 
 # use threading for SERIAL COMMUNICATION WITH ARDUINO
 serialThread = threading.Thread(target=startListening)
@@ -44,4 +42,3 @@ while isRunning:
         ADCtest()
     elif selection == '0':
         isRunning = False
-        end

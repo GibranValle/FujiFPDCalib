@@ -1,4 +1,4 @@
-from util.serialCOM import communicate, wait4light
+from util.serialCOM import communicate
 
 
 def shadingCalib(arduino, exposures=44):
@@ -8,18 +8,16 @@ def shadingCalib(arduino, exposures=44):
     # exposures loop
     for i in range(1, exposures):
         print(f"\nRequesting exposure {i} of {exposures}")
-        dataLost = communicate("S", "S", 1, arduino)
-        if dataLost:
-            print("Communication error")
+        comError = communicate("S")
+        if comError:
             return
 
         # wait 10 secs OR wait light to turn off
         wait4light(arduino, "Under exposure...", 10, False)
 
         print("\nRequesting end of exposure\n")
-        dataLost = communicate("X", "X", 1, arduino)
-        if dataLost:
-            print("Communication error")
+        comError = communicate("X")
+        if comError:
             return
         print("Exposure done")
 

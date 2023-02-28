@@ -1,6 +1,8 @@
+// UPDATED FIRMWARE TO MATCH NEW PCB
+
 // PINS
-const int relayOn = 4; // D2
-const int relayOff = 2; //D4
+const int relayOn = 2; // D2
+//const int relayOff = 2; //D4
 const int analogInPin = A2;  // Analog input pin that the potentiometer is attached to
 
 // analog read

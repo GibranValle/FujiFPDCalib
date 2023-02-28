@@ -1,23 +1,24 @@
-from util.serialCOM import wait4light
+from util.light import setLightDelay
+from util.serialCOM import communicate
 
 
-def pixedDefectCalib(arduino, exposures=1):
+def pixedDefectCalib(exposures=1):
     print("Pixel defect calibration selected")
     print("Estimated waiting time: 5 mins")
-    print("Exposures required: "+exposures)
+    print(f"Exposures required: {exposures}")
     # exposures loop
-    print(f"\nRequesting exposure {i} of {exposures}")
-    dataLost = communicate("S", "S", 1, arduino)
-    if dataLost:
+    print(f"\nRequesting exposure 1 of {exposures}")
+    comError = communicate("S")
+    if comError:
         print("Communication error")
         return
 
     # wait 10 secs OR wait light to turn off
-    wait4light(arduino, "Under exposure...", 10, False)
+    setLightDelay("Under exposure...", 1, 10)
 
     print("\nRequesting end of exposure\n")
-    dataLost = communicate("X", "X", 1, arduino)
-    if dataLost:
+    comError = communicate("X")
+    if comError:
         print("Communication error")
         return
     print("Exposure done")

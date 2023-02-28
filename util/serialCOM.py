@@ -1,7 +1,6 @@
 import serial
 import serial.tools.list_ports
-from readConfigFile import getPort, getThreshold
-import time
+from readConfigFile import getPortName
 
 # global variables for SERIAL COM
 arduino = None
@@ -9,13 +8,16 @@ buffer = ''
 isListening = True
 isEcho = False
 response = ''
+waitingResponse = False
+value = 0
+ADCWaiting = False
 
 
 def startListening():
-    global arduino, isListening, buffer, isEcho, response
+    global arduino, isListening, buffer, isEcho, response, value, ADCWaiting, waitingResponse
 
     try:
-        arduino = serial.Serial(f"COM{getPort()}", 9600)
+        arduino = advancedSerialInit()
     except any:
         print(" *** COM NOT CONNECTED ***")
 
@@ -33,83 +35,57 @@ def startListening():
         # data to read
         if arduino.in_waiting:
             response = arduino.readline().decode('ascii').rstrip()
-            print(f"data: {response}") if isEcho else 0
+            waitingResponse = False
+            if response == 'E':
+                print("EXPOSURE TIMEOUT")
+            elif response[0] == 'M':
+                ADCWaiting = False
+                value = int(response[2:].rstrip())
+            elif response != '' and isEcho:
+                print(f"data: {response}")
 
         if not arduino.isOpen():
-            print(f" *** ARDUINO IS NO LONGER CONNECTED IN COM{getPort()} *** ")
+            print(f" *** ARDUINO IS NO LONGER CONNECTED *** ")
             return
 
 
-def addBuffer(message):
+def add2Buffer(message):
     global buffer
     buffer = message
 
 
-def communicate(message, expectedResponse):
+def overrideResponse():
     global response
+    response = 'ERROR'
+
+
+def communicate(message):
+    global response, waitingResponse
+    waitingResponse = True
     comError = True
-    addBuffer(message)
-    time.sleep(0.2)
-    if response == expectedResponse:
+    add2Buffer(message)
+    while waitingResponse:
+        0
+    # timer for duration of exposure
+    if response == message:
         comError = False
         response = ''
         return comError
+    print(" *** COMMUNICATION ERROR ***")
     return comError
 
 
-def wait4light(message, waitTime, litWanted=True, samples=5):
+def readADC():
     """
-    Count ratio of sensed light
-    :param litWanted: if true will break if ratio is 1
-    :param waitTime: in secs
-    :param arduino: serial device
-    :param message: stand-by message during waiting
-    :param samples: number of samples per sec
+    Response is "M:0000" to "M:0"
+    :return: int value of ADC
     """
-    isReady = 0
-    for j in reversed(range(0, waitTime)):
-        if isReady >= 2:
-            print(f"\rWaited time={j}s", end='')
-            print(f"\rReady to continue light ratio={round(ratio, 2)}")
-            break
-        litCount = 1
-        print(f"\r{message}" + str(waitTime-j)+' s', end='')
-        for k in range(samples):
-            time.sleep(1 / samples)
-            isLit = isLightOn(getThreshold())
-            litCount = litCount + 1 if isLit else litCount
-        ratio = litCount / (samples+1)
-        if litWanted and ratio >= 0.8:
-            isReady += 1
-        if not litWanted and ratio <= 0.4:
-            isReady += 1
-
-
-def isLightOn(threshold):
-    """
-    :param arduino: value to compare
-    :param threshold: value to compare
-    """
-    status = True if lightValue(1) > threshold else False
-    return status
-
-
-def lightValue(timeout, prescale=100):
-    # TODO MORE GENERIC FORM NOW WORKING WITH "M:000"
-    """
-    :param timeout: time in secs to listen
-    :param device: pyserial object ARDUINO
-    """
-    global device
-    device.write("M\n".encode())
-    for i in range(1, timeout * prescale):
-        time.sleep(1 / prescale)
-        if device.in_waiting:
-            # M:1 M:10 M:100 M:1000
-            data = device.readline().decode('ascii').rstrip()
-            header = data[0]
-            value = int(data[2:])
-            return value
+    global value, ADCWaiting
+    ADCWaiting = True
+    add2Buffer("M")
+    while ADCWaiting:
+        0
+    return value
 
 
 def getPorts():
@@ -132,13 +108,10 @@ def findItem(portsFound, matchingText):
 
 def advancedSerialInit():
     foundPorts = getPorts()
-    connectPort = findItem(foundPorts, "COM1")
+    connectPort = findItem(foundPorts, getPortName())
 
     if connectPort != '':
-        arduino = serial.Serial(connectPort, 9600)
-        print('Connected to ' + connectPort)
-    else:
-        print('Connection Issue')
+        return serial.Serial(connectPort, 9600)
 
 
 def enableSerialEcho():

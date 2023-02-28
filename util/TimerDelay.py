@@ -1,8 +1,11 @@
 from util.RepeatTimer import RepeatTimer
+from threading import Timer
 
 count = 0
 timer = None
+timerTO = None
 isWaiting = False
+isWaitingTimeout = False
 
 
 def display(message, initValue, finalValue):
@@ -56,3 +59,20 @@ def endTimerDelay():
         return
     timer.cancel()
     isWaiting = False
+
+
+def timeOut():
+    from util.serialCOM import overrideResponse
+    overrideResponse()
+
+
+def endTimeOut():
+    global timerTO
+    timerTO.cancel()
+
+
+def setTimeOut(millis):
+    global timerTO
+    timerTO = Timer(millis/1000, timeOut)
+    timerTO.start()
+

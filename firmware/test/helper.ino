@@ -1,21 +1,24 @@
+// UPDATED FIRMWARE TO MATCH NEW PCB
+
 void relayInit() {
   // RELAY INIT
   pinMode(relayOn, OUTPUT);
-  pinMode(relayOff, OUTPUT);
-  digitalWrite(relayOn, LOW);
-  digitalWrite(relayOff, LOW);
+  //pinMode(relayOff, OUTPUT);
+  //digitalWrite(relayOn, LOW);
+  //digitalWrite(relayOff, LOW);
 }
 
 void startExposure() {
   digitalWrite(relayOn, HIGH);
-  delay(100);
-  digitalWrite(relayOn, LOW);
+  //delay(100);
+  //digitalWrite(relayOn, LOW);
 }
 
 void endExposure() {
-  digitalWrite(relayOff, HIGH);
-  delay(100);
-  digitalWrite(relayOff, LOW);
+  digitalWrite(relayOn, LOW);
+  //digitalWrite(relayOff, HIGH);
+  //delay(100);
+  //digitalWrite(relayOff, LOW);
 }
 
 void performShortExposure() {

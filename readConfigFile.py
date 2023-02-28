@@ -10,15 +10,18 @@ def readIni():
     for i in range(0, size):
         splited = lines[i].rstrip().split("=")
         name = splited[0]
-        value = int(splited[1])
+        try:
+            value = int(splited[1])
+        except ValueError:
+            value = splited[1]
         readData[name] = value
 
     return readData
 
 
-def getPort():
+def getPortName():
     data = readIni()
-    port = data['COM']
+    port = data['COMNAME']
     return str(port)
 
 
@@ -61,5 +64,5 @@ def getCountDown():
 def isDemoMode():
     data = readIni()
     value = data['DEMO']
-    boolValue = True if value else  False
+    boolValue = True if value else False
     return boolValue
