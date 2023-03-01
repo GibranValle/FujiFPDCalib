@@ -1,91 +1,78 @@
+import time
+
 import serial
 import serial.tools.list_ports
-from readConfigFile import getPortName
+from readConfigFile import getPortName, isEchoEnable
 
 # global variables for SERIAL COM
 arduino = None
 buffer = ''
 isListening = True
-isEcho = False
 response = ''
 waitingResponse = False
-value = 0
-ADCWaiting = False
 
 
 def startListening():
-    global arduino, isListening, buffer, isEcho, response, value, ADCWaiting, waitingResponse
-
+    global arduino, isListening, buffer, response, waitingResponse
     try:
         arduino = advancedSerialInit()
+        if arduino.isOpen():
+            arduino.close()
+        arduino.open()
+        if not arduino.isOpen():
+            print(" *** SERIAL ERROR, CANNOT OPEN SERIAL PORT ***")
+
     except any:
         print(" *** COM NOT CONNECTED ***")
 
-    if not arduino.isOpen():
-        arduino.open()
-        if not arduino.isOpen():
-            print("SERIAL PORT RUNNING...")
-
     while isListening:
+        if not arduino.isOpen():
+            print(f" *** ARDUINO IS NO LONGER CONNECTED *** ")
+            return -1
         # data to send
         if buffer != '':
             arduino.write(f"{buffer}\n".encode())
             buffer = ''
-
         # data to read
-        if arduino.in_waiting:
+        elif arduino.in_waiting:
             response = arduino.readline().decode('ascii').rstrip()
-            waitingResponse = False
-            if response == 'E':
-                print("EXPOSURE TIMEOUT")
-            elif response[0] == 'M':
-                ADCWaiting = False
-                value = int(response[2:].rstrip())
-            elif response != '' and isEcho:
-                print(f"data: {response}")
-
-        if not arduino.isOpen():
-            print(f" *** ARDUINO IS NO LONGER CONNECTED *** ")
-            return
+            print(response) if isEchoEnable() else 0
+            if response != '':
+                waitingResponse = False
 
 
-def add2Buffer(message):
-    global buffer
+def endListening():
+    global isListening
+    isListening = False
+    arduino.close()
+    time.sleep(2)
+
+
+def write2Read(message):
+    global buffer, waitingResponse, response
+    waitingResponse = True
     buffer = message
-
-
-def overrideResponse():
-    global response
-    response = 'ERROR'
+    while waitingResponse:
+        pass
+    return response
 
 
 def communicate(message):
-    global response, waitingResponse
-    waitingResponse = True
-    comError = True
-    add2Buffer(message)
-    while waitingResponse:
-        0
-    # timer for duration of exposure
-    if response == message:
+    res = write2Read(message)
+    if res == message:
         comError = False
-        response = ''
         return comError
     print(" *** COMMUNICATION ERROR ***")
+    comError = True
     return comError
 
 
 def readADC():
-    """
-    Response is "M:0000" to "M:0"
-    :return: int value of ADC
-    """
-    global value, ADCWaiting
-    ADCWaiting = True
-    add2Buffer("M")
-    while ADCWaiting:
-        0
-    return value
+    res = write2Read("M")
+    if len(res) > 2:
+        value = int(res[2:])
+        return value
+    return -1
 
 
 def getPorts():
@@ -112,14 +99,4 @@ def advancedSerialInit():
 
     if connectPort != '':
         return serial.Serial(connectPort, 9600)
-
-
-def enableSerialEcho():
-    global isEcho
-    isEcho = True
-
-
-def disableSerialEcho():
-    global isEcho
-    isEcho = False
 

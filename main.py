@@ -1,44 +1,59 @@
 # test started 29/01/2023
-# final modification @ 20/02/2023
+# final modification @ 28/02/2023
+import time
+import os
+import threading
+
 from calibrations.noExposureCalib import offsetCalib, defectCalib
 from calibrations.pixelDefectCalibration import pixedDefectCalib
 from calibrations.shadingCalibration import shadingCalib
 from calibrations.uniformityCalibration import uniformityCalib
 from calibrations.verification import mAVerification, ADCtest, testCommunication
-import os
-import threading
-from util.serialCOM import startListening
+from util.serialCOM import startListening, endListening
 
-# use threading for SERIAL COMMUNICATION WITH ARDUINO
-serialThread = threading.Thread(target=startListening)
-serialThread.start()
 
-# use infinite loop for interaction
-isRunning = True
-
-while isRunning:
-    print('\nAutomatic MG FPD Calibration script by Gibran Valle FFMX\n')
-    print(' 1) Offset \n 2) Defect')
-    print(' 3) Pixel-defect \n 4) Shading \n 5) X-ray uniformity')
-    print(' 6) mA Verification \n 7) Test communication \n 8) ADC Reading TEST')
-    print(' 0) Exit program\n')
-    selection = input('selected: ')
+def main():
+    # use threading for SERIAL COMMUNICATION WITH ARDUINO
+    serialThread = threading.Thread(target=startListening)
+    serialThread.start()
+    print("OPENING SERIAL PORT... PLEASE WAIT")
     os.system('cls')
-    if selection == '1':
-        offsetCalib()
-    elif selection == '2':
-        defectCalib()
-    elif selection == '3':
-        pixedDefectCalib()
-    elif selection == '4':
-        shadingCalib()
-    elif selection == '5':
-        uniformityCalib()
-    elif selection == '6':
-        mAVerification()
-    elif selection == '7':
-        testCommunication()
-    elif selection == '8':
-        ADCtest()
-    elif selection == '0':
-        isRunning = False
+    time.sleep(1.5)
+
+    isRunning = True
+    while isRunning:
+        print('\nAutomatic MG FPD Calibration script by Gibran Valle FFMX\n')
+        print(' 1) Offset \n 2) Defect')
+        print(' 3) Pixel-defect \n 4) Shading \n 5) X-ray uniformity')
+        print(' 6) mA Verification \n 7) Test communication \n 8) ADC Reading TEST')
+        print(' 0) Exit program\n')
+        try:
+            selection = input('selected: ')
+            os.system('cls')
+            if selection == '1':
+                offsetCalib()
+            elif selection == '2':
+                defectCalib()
+            elif selection == '3':
+                pixedDefectCalib()
+            elif selection == '4':
+                shadingCalib()
+            elif selection == '5':
+                uniformityCalib()
+            elif selection == '6':
+                mAVerification()
+            elif selection == '7':
+                testCommunication()
+            elif selection == '8':
+                ADCtest()
+            elif selection == '0':
+                isRunning = False
+                endListening()
+        except KeyboardInterrupt:
+            print("FINISHING...")
+            isRunning = False
+            endListening()
+
+
+if __name__ == '__main__':
+    main()

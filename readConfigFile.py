@@ -66,3 +66,10 @@ def isDemoMode():
     value = data['DEMO']
     boolValue = True if value else False
     return boolValue
+
+
+def isEchoEnable():
+    data = readIni()
+    value = data['ECHO']
+    boolValue = True if value else False
+    return boolValue

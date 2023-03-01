@@ -7,7 +7,7 @@ from util.TimerDelay import setTimerDelay, startTimerDelay, endTimerDelay
 
 
 def mAVerification(waitTime=getUltraLong()):
-    print("mA verification selected")
+    print("6) mA verification selected")
     print("1 LONG Exposure required")
     print("Estimated duration of exposure: 5min")
     print(" <-- Requesting for exposure -->")
@@ -42,7 +42,7 @@ def mAVerification(waitTime=getUltraLong()):
 
 
 def testCommunication():
-    print("Communication test selected")
+    print("7) Communication test selected")
     comError = communicate("T")
     if comError:
         return
@@ -50,7 +50,7 @@ def testCommunication():
 
 
 def ADCtest(samples=20):
-    print("ADC Reading test selected")
+    print("8) ADC Reading test selected")
     for i in range(samples):
         value = readADC()
         print("Value: "+str(value))
