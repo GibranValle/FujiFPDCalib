@@ -15,15 +15,9 @@ def offsetCalib():
     print("Estimated waiting time: 5 mins")
     print("Exposures required: 0")
 
-    print("Open RUPcTools")
-    if not isDemo:
-        openRUPcTools()
-    print("Open MUTL Calibration window")
-    if not isDemo:
-        openMUTLCalibMenu()
-    print("Starting field calibration\n")
-    if not isDemo:
-        runOffsetCalibration()
+    openRUPcTools()
+    openMUTLCalibMenu()
+    runOffsetCalibration()
 
     inputThread = threading.Thread(target=getInput)
     inputThread.start()

@@ -9,6 +9,7 @@ from calibrations.pixelDefectCalibration import pixedDefectCalib
 from calibrations.shadingCalibration import shadingCalib
 from calibrations.uniformityCalibration import uniformityCalib
 from calibrations.verification import mAVerification, ADCtest, testCommunication
+from util.compareImgs import compareXRayIcon
 from util.serialCOM import startListening, endListening
 
 
@@ -26,6 +27,7 @@ def main():
         print(' 1) Offset \n 2) Defect')
         print(' 3) Pixel-defect \n 4) Shading \n 5) X-ray uniformity')
         print(' 6) mA Verification \n 7) Test communication \n 8) ADC Reading TEST')
+        print(' 9) SS Test')
         print(' 0) Exit program\n')
         try:
             selection = input('selected: ')
@@ -46,6 +48,8 @@ def main():
                 testCommunication()
             elif selection == '8':
                 ADCtest()
+            elif selection == '8':
+                compareXRayIcon()
             elif selection == '0':
                 isRunning = False
                 endListening()
