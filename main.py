@@ -26,7 +26,7 @@ def main():
         print('\nAutomatic MG FPD Calibration script by Gibran Valle FFMX\n')
         print(' 1) Offset \n 2) Defect')
         print(' 3) Pixel-defect \n 4) Shading \n 5) X-ray uniformity')
-        print(' 6) mA Verification \n 7) Test communication \n 8) ADC Reading TEST')
+        print(' 6) mA Verification \n 7) Test communication')
         print(' 9) SS Test')
         print(' 0) Exit program\n')
         try:
@@ -46,9 +46,7 @@ def main():
                 mAVerification()
             elif selection == '7':
                 testCommunication()
-            elif selection == '8':
-                ADCtest()
-            elif selection == '8':
+            elif selection == '9':
                 compareXRayIcon()
             elif selection == '0':
                 isRunning = False

@@ -1,7 +1,7 @@
 import threading
 import time
 
-from readConfigFile import getUltraLong, getCountDown
+from readConfigFile import getUltraLong, getCountDown, getCalcTime
 from util.serialCOM import communicate, readADC
 from util.TimerDelay import setTimerDelay, startTimerDelay, endTimerDelay
 
@@ -39,6 +39,10 @@ def mAVerification(waitTime=getUltraLong()):
     if comError:
         return print(" *** PLEASE END EXPOSURE MANUALLY *** ")
     print(" >-- Exposure done --< ")
+
+    # timer for duration of exposure
+    setTimerDelay("\r !! CALCULATING: ", initValue=0, finalValue=getCalcTime())
+    startTimerDelay()
 
 
 def testCommunication():

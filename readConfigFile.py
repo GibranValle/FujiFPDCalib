@@ -72,3 +72,9 @@ def isEchoEnable():
     value = data['ECHO']
     boolValue = True if value else False
     return boolValue
+
+
+def getCalcTime():
+    data = readIni()
+    duration = data['CALCULATION_TIME']
+    return duration

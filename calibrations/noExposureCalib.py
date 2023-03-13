@@ -1,5 +1,7 @@
 import threading
 import time
+from util.macros import startMouseCalib
+
 
 isFinished = False
 
@@ -10,7 +12,7 @@ def offsetCalib():
     print("Estimated waiting time: 7 mins")
     print("Exposures required: 0")
     print("Starting offset calibration\n")
-    starMouseCalib('offset')
+    startMouseCalib('offset')
 
     inputThread = threading.Thread(target=getInput)
     inputThread.start()
@@ -30,7 +32,7 @@ def defectCalib():
     print("Estimated waiting time: 7 mins")
     print("Exposures required: 0")
     print("Starting offset calibration\n")
-    starMouseCalib('defect')
+    startMouseCalib('defect')
 
     inputThread = threading.Thread(target=getInput)
     inputThread.start()

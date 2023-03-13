@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 import cv2
 import pyautogui
@@ -62,5 +64,27 @@ def isStandBy():
         return True
     if not isInBlocked:
         print(" ** CANNOT SEE UNIT STATUS, PLEASE VERIFY **")
+        return 'Error'
     return False
 
+
+def setSSDelay(init, final, standByWanted=True):
+    counter = init
+    offset = 1 if final > init else -1
+    for i in range(init, final):
+        counter += offset
+        print(f"\rWaiting: {counter}s", end='')
+        time.sleep(1)
+        if standByWanted and isStandBy():
+            break
+        elif not standByWanted and not isStandBy():
+            break
+    print("\n\n ** MU0 IS READY TO CONTINUE... ABORTING COUNTDOWN **", end='')
+
+
+def waitForExposureReady(init, final):
+    setSSDelay(init, final, standByWanted=True)
+
+
+def waitForExposureEnd(init, final):
+    setSSDelay(init, final, standByWanted=False)

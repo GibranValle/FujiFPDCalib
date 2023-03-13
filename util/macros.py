@@ -1,3 +1,4 @@
+import time
 from shell.activeWindow import getWindowName
 from util.mouseKeyboard import openRequest, changeTab, clickOffsetCalibration, clickDefectCalibration, \
     clickDefectSolidCalibration, clickPixelDefectCalibration, clickShadingCalibration, clickUniformityCalibration
@@ -11,19 +12,23 @@ def startMouseCalib(calibration):
     """
     isRUOpen = openRequest("RUPCTOOLS")
     if isRUOpen:
-        # TODO MOVE ALT TAB TO RU
-        windowName = getWindowName()
-        while windowName != 'RUPTools':
-            changeTab()
-            windowName = getWindowName()
+        index = getWindowName().find('RUPCTools')
+        i = 0
+        while index < 0:
+            i += 1
+            changeTab(i)
+            index = getWindowName().find('RUPCTools')
+            time.sleep(0.1)
 
     isMUTLOpen = openRequest("MUTL")
     if isMUTLOpen:
-        # TODO MOVE ALT TAB TO MUTL
-        windowName = getWindowName()
-        while windowName != 'RUPTools':
-            changeTab()
-            windowName = getWindowName()
+        index = getWindowName().find('MUTL')
+        i = 0
+        while index < 0:
+            i += 1
+            changeTab(i)
+            index = getWindowName().find('MUTL')
+            time.sleep(0.1)
 
     if calibration == 'offset':
         clickOffsetCalibration()

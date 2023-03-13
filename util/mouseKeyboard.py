@@ -16,9 +16,12 @@ def pressWindows():
     time.sleep(0.5)
 
 
-def changeTab(keys):
-    pyautogui.hotkey("altleft", "tab")
-    time.sleep(0.5)
+def changeTab(presses=1):
+    pyautogui.keyDown("altleft")
+    time.sleep(.2)
+    pyautogui.press("tab", presses=presses)
+    time.sleep(.2)
+    pyautogui.keyUp('alt')
 
 
 def typeTextEnter(string):
@@ -62,9 +65,6 @@ def closeRequest(appName):
             openMUTLCalibMenu()
             return True
         return False
-
-
-
 
 
 def openRUPcTools():
