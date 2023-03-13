@@ -1,16 +1,25 @@
 import time
 
-from readConfigFile import getThreshold
+from readConfigFile import getThreshold, getLowThreshold
 from util.serialCOM import readADC
 
 
-def lightDelayThread(init, final, sampling=4):
+THRESHOLD = getThreshold()
+LOW_THRESHOLD = getLowThreshold()
+
+
+def setLightDelay(init, final, lightWanted=True, sampling=4):
     counter = init
     offset = 1 if final > init else -1
     lightCount = 0
     darkCount = 0
     for i in range(init, final):
         avg = 0
+        # TODO wait for end of exposure
+        if (lightWanted and lightCount > 2) or (not lightWanted and darkCount > 2):
+            print("\n\n ** MU0 IS READY TO CONTINUE... ABORTING COUNTDOWN **", end='')
+            break
+
         for s in range(sampling):
             value = readADC()
             avg += value
@@ -18,17 +27,20 @@ def lightDelayThread(init, final, sampling=4):
         counter += offset
         avg = avg / sampling
 
-        if lightCount > 2:
-            print("\n\n ** MU0 IS READY TO CONTINUE... ABORTING COUNTDOWN **", end='')
-            break
-
-        if avg > getThreshold():
+        if avg > THRESHOLD:
             lightCount += 1
-        else:
+        elif LOW_THRESHOLD > avg > THRESHOLD:
             darkCount += 1
+        else:
+            print("\n ** AVG TOO LOW PLEASE VERIFY **")
+
         print(f"\rWaiting: {counter}s AVG:{avg} ON:{lightCount} OFF:{darkCount}", end='')
     print("\n")
 
 
-def setLightDelay(init, final):
-    lightDelayThread(init, final)
+def waitForReadySignal(init, final):
+    setLightDelay(init, final, lightWanted=True)
+
+
+def waitForDoneSignal(init, final):
+    setLightDelay(init, final, lightWanted=False)

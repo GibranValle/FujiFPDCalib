@@ -1,9 +1,11 @@
 import pyautogui
 import time
 import variables
+from shell.activeWindow import getWindowName
+from shell.processRunning import process_exists
 
 
-def moveCursorandClick(x,y,d=1):
+def moveCursorandClick(x, y, d=1):
     # print(pyautogui.size())
     pyautogui.moveTo(x, y, duration=d)
     pyautogui.click(x, y)
@@ -33,6 +35,38 @@ def typeText(string):
     time.sleep(0.5)
 
 
+# ---------------- complex options
+def openRequest(appName):    
+    if appName == 'RUPCTOOLS':
+        if process_exists('rupc'):
+            return False
+        openRUPcTools()
+        return True
+
+    if appName == 'MUTL':
+        if process_exists('rupc'):
+            return False
+        openMUTLCalibMenu()
+        return True
+
+
+def closeRequest(appName):
+    if appName == 'RUPCTOOLS':
+        if process_exists('rupc'):
+            openRUPcTools()
+            return True
+        return False
+
+    elif appName == 'MUTL':
+        if process_exists('rupc'):
+            openMUTLCalibMenu()
+            return True
+        return False
+
+
+
+
+
 def openRUPcTools():
     time.sleep(0.5)
     pressWindows()
@@ -60,7 +94,6 @@ def openMUTLCalibMenu():
     moveCursorandClick(variables.RIGHT_OPTIONS)
     time.sleep(0.5)
     moveCursorandClick(variables.MUTL_CALIBRATION)
-    time.sleep(0.5)
 
 
 def closeMUTLCalibMenu():
@@ -69,7 +102,18 @@ def closeMUTLCalibMenu():
     time.sleep(0.5)
 
 
-def runOffsetCalibration():
+def selectCalibMUTL():
+    time.sleep(0.5)
+    moveCursorandClick(variables.LEFT_OPTIONS)
+    time.sleep(0.1)
+    moveCursorandClick(variables.LEFT_OPTIONS)
+    time.sleep(0.5)
+    moveCursorandClick(variables.RIGHT_OPTIONS)
+    time.sleep(0.5)
+    moveCursorandClick(variables.MUTL_CALIBRATION)
+
+
+def clickOffsetCalibration():
     time.sleep(0.5)
     moveCursorandClick(variables.OFFSET)
     time.sleep(0.5)
@@ -81,7 +125,7 @@ def runOffsetCalibration():
     time.sleep(0.5)
 
 
-def runDefectCalibration():
+def clickDefectCalibration():
     time.sleep(0.5)
     moveCursorandClick(variables.DEFECTE)
     time.sleep(0.5)
@@ -93,6 +137,55 @@ def runDefectCalibration():
     time.sleep(0.5)
 
 
+def clickDefectSolidCalibration():
+    time.sleep(0.5)
+    moveCursorandClick(variables.DEFECT_SOLID)
+    time.sleep(0.5)
+    moveCursorandClick(variables.CALIB_FPD)
+    time.sleep(0.5)
+    moveCursorandClick(variables.CALIB_FPD)
+    time.sleep(0.5)
+    moveCursorandClick(variables.FIELD_CALIBRATION)
+    time.sleep(0.5)
+
+
+def clickPixelDefectCalibration():
+    time.sleep(0.5)
+    moveCursorandClick(variables.PIXEL_DEFECT)
+    time.sleep(0.5)
+    moveCursorandClick(variables.CALIB_FPD)
+    time.sleep(0.5)
+    moveCursorandClick(variables.CALIB_FPD)
+    time.sleep(0.5)
+    moveCursorandClick(variables.FIELD_CALIBRATION)
+    time.sleep(0.5)
+
+
+def clickShadingCalibration():
+    time.sleep(0.5)
+    moveCursorandClick(variables.SHADING)
+    time.sleep(0.5)
+    moveCursorandClick(variables.CALIB_FPD)
+    time.sleep(0.5)
+    moveCursorandClick(variables.CALIB_FPD)
+    time.sleep(0.5)
+    moveCursorandClick(variables.FIELD_CALIBRATION)
+    time.sleep(0.5)
+
+
+def clickUniformityCalibration():
+    time.sleep(0.5)
+    moveCursorandClick(variables.UNIFORMITY)
+    time.sleep(0.5)
+    moveCursorandClick(variables.CALIB_FPD)
+    time.sleep(0.5)
+    moveCursorandClick(variables.CALIB_FPD)
+    time.sleep(0.5)
+    moveCursorandClick(variables.FIELD_CALIBRATION)
+    time.sleep(0.5)
+
+
+# TODO ADVANCED FUNTIONS IN DEVELOPMENT
 def deleteMU0():
     moveCursorandClick(variables.MU0)
     moveCursorandClick(variables.DELETE_RU)
@@ -128,9 +221,3 @@ def addBPY():
     moveCursorandClick(variables.RU_IP)
     typeText("192168000102")
     moveCursorandClick(variables.PING)
-
-
-
-
-
-

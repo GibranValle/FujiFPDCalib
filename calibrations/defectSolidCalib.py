@@ -4,8 +4,8 @@ from util.LightDelay import setLightDelay, waitForReadySignal, waitForDoneSignal
 from util.serialCOM import communicate
 
 
-def pixedDefectCalib(exposures=1):
-    print("Pixel defect calibration selected")
+def defectSolidCalib(exposures=1):
+    print("Defect solid calibration selected")
     print("Estimated waiting time: 5 mins")
     # wait 500 secs OR wait light
     waitForReadySignal(0, 500)

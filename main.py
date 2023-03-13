@@ -4,6 +4,7 @@ import time
 import os
 import threading
 
+from calibrations.defectSolidCalib import defectSolidCalib
 from calibrations.noExposureCalib import offsetCalib, defectCalib
 from calibrations.pixelDefectCalibration import pixedDefectCalib
 from calibrations.shadingCalibration import shadingCalib
@@ -19,13 +20,14 @@ def main():
     print("OPENING SERIAL PORT... PLEASE WAIT")
     os.system('cls')
     time.sleep(1.5)
+    print(" ** PLEASE CLOSE ALL WINDOWS OPENED ** ")
 
     isRunning = True
     while isRunning:
         print('\nAutomatic MG FPD Calibration script by Gibran Valle FFMX\n')
         print(' 1) Offset \n 2) Defect')
-        print(' 3) Pixel-defect \n 4) Shading \n 5) X-ray uniformity')
-        print(' 6) mA Verification \n 7) Test communication \n 8) ADC Reading TEST')
+        print(' 3) Defect-solid \n 4) Pixel-defect \n 5) Shading \n 6) X-ray uniformity')
+        print(' 7) mA Verification \n 8) Test communication \n 9) ADC Reading TEST')
         print(' 0) Exit program\n')
         try:
             selection = input('selected: ')
@@ -35,16 +37,18 @@ def main():
             elif selection == '2':
                 defectCalib()
             elif selection == '3':
-                pixedDefectCalib()
+                defectSolidCalib()
             elif selection == '4':
-                shadingCalib()
+                pixedDefectCalib()
             elif selection == '5':
-                uniformityCalib()
+                shadingCalib()
             elif selection == '6':
-                mAVerification()
+                uniformityCalib()
             elif selection == '7':
-                testCommunication()
+                mAVerification()
             elif selection == '8':
+                testCommunication()
+            elif selection == '9':
                 ADCtest()
             elif selection == '0':
                 isRunning = False

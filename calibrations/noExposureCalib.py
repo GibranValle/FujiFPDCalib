@@ -1,29 +1,16 @@
 import threading
 import time
 
-from readConfigFile import isDemoMode
-from util.mouseKeyboard import openRUPcTools, openMUTLCalibMenu, runOffsetCalibration, runDefectCalibration, \
-    closeMUTLCalibMenu, closeRUPcTools
-
 isFinished = False
-isDemo = isDemoMode()
 
 
 def offsetCalib():
-    global isFinished, isDemo
+    global isFinished
     print("Offset calibration selected")
-    print("Estimated waiting time: 5 mins")
+    print("Estimated waiting time: 7 mins")
     print("Exposures required: 0")
-
-    print("Open RUPcTools")
-    if not isDemo:
-        openRUPcTools()
-    print("Open MUTL Calibration window")
-    if not isDemo:
-        openMUTLCalibMenu()
-    print("Starting field calibration\n")
-    if not isDemo:
-        runOffsetCalibration()
+    print("Starting offset calibration\n")
+    starMouseCalib('offset')
 
     inputThread = threading.Thread(target=getInput)
     inputThread.start()
@@ -34,32 +21,16 @@ def offsetCalib():
             isFinished = True
         print(f"\rWaited time in secs {count}", end='')
         count += 1
-
-    print("\nClose MUTL Calibration window")
-    if not isDemo:
-        closeMUTLCalibMenu()
-    print("Close RUPcTool")
-    if not isDemo:
-        closeRUPcTools()
-
     print("\n --Calibration complete-- \n")
 
 
 def defectCalib():
-    global isFinished, isDemo
+    global isFinished
     print("Defect calibration selected")
-    print("Estimated waiting time: 5 mins")
+    print("Estimated waiting time: 7 mins")
     print("Exposures required: 0")
-
-    print("Open RUPcTools")
-    if not isDemo:
-        openRUPcTools()
-    print("Open MUTL Calibration window")
-    if not isDemo:
-        openMUTLCalibMenu()
-    print("Starting field calibration\n")
-    if not isDemo:
-        runDefectCalibration()
+    print("Starting offset calibration\n")
+    starMouseCalib('defect')
 
     inputThread = threading.Thread(target=getInput)
     inputThread.start()
@@ -70,14 +41,6 @@ def defectCalib():
             isFinished = True
         print(f"\rWaited time in secs {count}", end='')
         count += 1
-
-    print("\nClose MUTL Calibration window")
-    if not isDemo:
-        closeMUTLCalibMenu()
-    print("Close RUPcTool")
-    if not isDemo:
-        closeRUPcTools()
-
     print("\n --Calibration complete-- \n")
 
 

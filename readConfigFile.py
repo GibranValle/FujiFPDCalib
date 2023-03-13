@@ -49,6 +49,12 @@ def getThreshold():
     return value
 
 
+def getLowThreshold():
+    data = readIni()
+    value = data['THRESHOLD']
+    return value
+
+
 def getMaxCount():
     data = readIni()
     value = data['COUNT_TO_CONTINUE']
@@ -59,13 +65,6 @@ def getCountDown():
     data = readIni()
     value = data['COUNTDOWN']
     return value
-
-
-def isDemoMode():
-    data = readIni()
-    value = data['DEMO']
-    boolValue = True if value else False
-    return boolValue
 
 
 def isEchoEnable():
