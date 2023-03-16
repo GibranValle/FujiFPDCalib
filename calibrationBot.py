@@ -8,9 +8,9 @@ from calibrations.noExposureCalib import offsetCalib, defectCalib
 from calibrations.pixelDefectCalibration import pixedDefectCalib
 from calibrations.shadingCalibration import shadingCalib
 from calibrations.uniformityCalibration import uniformityCalib
-from calibrations.verification import mAVerification, ADCtest, testCommunication
-from util.compareImgs import compareXRayIcon
-from util.serialCOM import startListening, endListening
+from calibrations.verification import mAVerification, testCommunication
+from util.compareImgs import scanXRayIcon
+from util.serialCOM import startListening, endListening, getSerialError
 
 
 def main():
@@ -20,9 +20,14 @@ def main():
     print("OPENING SERIAL PORT... PLEASE WAIT")
     os.system('cls')
     time.sleep(1.5)
-
+    if getSerialError():
+        print(' ** Verify connection with handswitch emulator **')
+        return
     isRunning = True
     while isRunning:
+        if getSerialError():
+            print(' ** Verify connection with handswitch emulator **')
+            break
         print('\nAutomatic MG FPD Calibration script by Gibran Valle FFMX\n')
         print(' 1) Offset \n 2) Defect')
         print(' 3) Pixel-defect \n 4) Shading \n 5) X-ray uniformity')
@@ -47,7 +52,7 @@ def main():
             elif selection == '7':
                 testCommunication()
             elif selection == '9':
-                compareXRayIcon()
+                scanXRayIcon()
             elif selection == '0':
                 isRunning = False
                 endListening()

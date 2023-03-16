@@ -12,12 +12,12 @@ def startMouseCalib(calibration):
     """
     isRUOpen = openRequest("RUPCTOOLS")
     if isRUOpen:
-        index = getWindowName().find('RUPCTools')
+        index = getWindowName().find('RU')
         i = 0
         while index < 0:
             i += 1
             changeTab(i)
-            index = getWindowName().find('RUPCTools')
+            index = getWindowName().find('RU')
             time.sleep(0.1)
 
     isMUTLOpen = openRequest("MUTL")

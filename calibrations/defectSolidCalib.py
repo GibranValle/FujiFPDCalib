@@ -2,6 +2,7 @@ import threading
 
 from util.compareImgs import waitForExposureReady, waitForExposureEnd
 from util.macros import startMouseCalib
+from util.readConfigFile import isAutoMouse
 from util.serialCOM import communicate
 
 
@@ -9,7 +10,8 @@ def defectSolidCalib(exposures=1):
     print("Defect solid calibration selected")
     print("Estimated waiting time: 5 mins")
     # TODO MOUSE CALIB
-    startMouseCalib('defect-solid')
+    if isAutoMouse():
+        startMouseCalib('defect-solid')
     # wait 500 secs OR wait SS
     waitForExposureReady(0, 500)
     print(f"Exposures required: {exposures}")

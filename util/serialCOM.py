@@ -2,17 +2,25 @@ import time
 
 import serial
 import serial.tools.list_ports
-from readConfigFile import getPortName, isEchoEnable
-
+from util.readConfigFile import getPortName, isEchoEnable, isSerialSkip
 # global variables for SERIAL COM
 arduino = None
 buffer = ''
 isListening = True
 response = ''
 waitingResponse = False
+serialError = False
+
+
+def getSerialError():
+    global serialError
+    if isSerialSkip():
+        return False
+    return serialError
 
 
 def startListening():
+    global serialError
     global arduino, isListening, buffer, response, waitingResponse
     try:
         arduino = advancedSerialInit()
@@ -21,14 +29,19 @@ def startListening():
         arduino.open()
         if not arduino.isOpen():
             print(" *** SERIAL ERROR, CANNOT OPEN SERIAL PORT ***")
+            serialError = True
+            return
 
-    except any:
+    except AttributeError:
         print(" *** COM NOT CONNECTED ***")
+        serialError = True
+        return
 
     while isListening:
         if not arduino.isOpen():
             print(f" *** ARDUINO IS NO LONGER CONNECTED *** ")
-            return -1
+            serialError = True
+            break
         # data to send
         if buffer != '':
             arduino.write(f"{buffer}\n".encode())
@@ -44,8 +57,11 @@ def startListening():
 def endListening():
     global isListening
     isListening = False
-    arduino.close()
-    time.sleep(2)
+    try:
+        arduino.close()
+        time.sleep(2)
+    except AttributeError:
+        pass
 
 
 def write2Read(message):

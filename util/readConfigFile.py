@@ -1,5 +1,7 @@
-
-file = open('setup.ini', 'r')
+import os
+path = os.getcwd()
+parent = os.path.dirname(path)
+file = open(f'{path}/setup.ini', 'r')
 readData = {}
 
 
@@ -78,3 +80,15 @@ def getCalcTime():
     data = readIni()
     duration = data['CALCULATION_TIME']
     return duration
+
+
+def isSerialSkip():
+    data = readIni()
+    skip = data['SKIP_SERIAL']
+    return skip
+
+
+def isAutoMouse():
+    data = readIni()
+    mouse = data['AUTOMATIC_MOUSE']
+    return mouse

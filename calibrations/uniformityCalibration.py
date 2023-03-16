@@ -2,12 +2,16 @@ import time
 
 from util.LightDelay import waitForDoneSignal, waitForReadySignal
 from util.compareImgs import waitForExposureEnd, waitForExposureReady
+from util.macros import startMouseCalib
+from util.readConfigFile import isAutoMouse
 from util.serialCOM import communicate
 
 
 def uniformityCalib(exposures=7):
     print("Uniformity calibration selected")
     print("Estimated waiting time: 10 mins")
+    if isAutoMouse():
+        startMouseCalib('uniformiry')
     print("Exposures required: "+str(exposures))
     waitForExposureReady(0, 25)
 
@@ -18,7 +22,7 @@ def uniformityCalib(exposures=7):
         if comError:
             return
 
-        waitForExposureEnd(0, 10)
+        waitForExposureEnd(0, 20)
 
         print("\nRequesting end of exposure\n")
         comError = communicate("X")

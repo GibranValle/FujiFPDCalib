@@ -1,13 +1,16 @@
 import threading
 
-from util.LightDelay import setLightDelay, waitForReadySignal, waitForDoneSignal
 from util.compareImgs import waitForExposureReady, waitForExposureEnd
+from util.macros import startMouseCalib
+from util.readConfigFile import isAutoMouse
 from util.serialCOM import communicate
 
 
 def pixedDefectCalib(exposures=1):
     print("Pixel defect calibration selected")
     print("Estimated waiting time: 5 mins")
+    if isAutoMouse():
+        startMouseCalib('pixel-defect')
     # wait 500 secs OR wait light
     waitForExposureReady(0, 500)
     print(f"Exposures required: {exposures}")

@@ -4,6 +4,10 @@ import numpy as np
 import cv2
 import pyautogui
 
+import os
+
+path = os.getcwd()
+
 
 def mse(img1, img2):
     # print(img1.shape)
@@ -19,10 +23,13 @@ def getSS():
 
 
 def saveXRayIcon(img):
-    #xray_box = getXRayIcon()
-    xray_box = getXRayIconWide()
+    width, height = pyautogui.size()
+    if height > 1000:
+        xray_box = getXRayIcon()
+    else:
+        xray_box = getXRayIconSmall()
     xray_icon = img.crop(xray_box)
-    xray_icon.save('../img/compare/xray_icon.png')
+    xray_icon.save(f'{path}/img/xray_icon.png')
 
 
 def getXRayIcon():
@@ -33,7 +40,7 @@ def getXRayIcon():
     return X_0, Y_0, X_1, Y_1
 
 
-def getXRayIconWide():
+def getXRayIconSmall():
     X_0 = 1095
     Y_0 = 1020
     X_1 = 1155
@@ -41,31 +48,34 @@ def getXRayIconWide():
     return X_0, Y_0, X_1, Y_1
 
 
-def compareXRayIcon():
+def scanXRayIcon():
     img = getSS()
     saveXRayIcon(img)
-    imgREF1 = cv2.imread('../img/xray_standby.png')
-    imgREF2 = cv2.imread('../img/xray_blocked.png')
-    imgComp = cv2.imread('../img/compare/xray_icon.png')
+    imgREF1 = cv2.imread(f'{path}/img/xray_standby.png')
+    imgREF2 = cv2.imread(f'{path}/img/xray_blocked.png')
+    imgComp = cv2.imread(f'{path}/img/xray_icon.png')
     error1 = mse(imgREF1, imgComp)
     error2 = mse(imgREF2, imgComp)
     print("Image matching Error between the two images:", error1, error2)
+    if error1 < 10:
+        return 'stdby'
+    elif error2 < 10:
+        return 'blocked'
+    else:
+        return -1
 
 
 def isStandBy():
-    img = getSS()
-    saveXRayIcon(img)
-    standby = cv2.imread('../img/xray_standby.png')
-    blocked = cv2.imread('../img/xray_blocked.png')
-    current = cv2.imread('../img/compare/xray_icon.png')
-    isInStandby = mse(standby, current)
-    isInBlocked = mse(blocked, current)
-    if isInStandby < 10:
+    status = scanXRayIcon()
+    if status == 'stdby':
+        print("Unit is ready to perform exposure")
         return True
-    if not isInBlocked:
-        print(" ** CANNOT SEE UNIT STATUS, PLEASE VERIFY **")
-        return 'Error'
-    return False
+    elif status == 'blocked':
+        print("Unit is NOT ready to perform exposure")
+        return False
+    elif status == -1:
+        #print(" ** CANNOT READ UNIT STATUS PLEASE VERIFY **")
+        return -1
 
 
 def setSSDelay(init, final, standByWanted=True):
@@ -75,11 +85,19 @@ def setSSDelay(init, final, standByWanted=True):
         counter += offset
         print(f"\rWaiting: {counter}s", end='')
         time.sleep(1)
-        if standByWanted and isStandBy():
+        status = isStandBy()
+        if standByWanted and status:
+            print("\n\n ** MU0 IS READY TO CONTINUE... ABORTING COUNTDOWN **", end='')
+
             break
-        elif not standByWanted and not isStandBy():
+        elif not standByWanted and not status:
+            print("\n\n ** MU0 IS READY TO CONTINUE... ABORTING COUNTDOWN **", end='')
             break
-    print("\n\n ** MU0 IS READY TO CONTINUE... ABORTING COUNTDOWN **", end='')
+
+        if standByWanted:
+            print(f'Waiting for exposure ready signal{counter}s', end='')
+        elif not standByWanted:
+            print(f'Waiting for exposure end{counter}s', end='')
 
 
 def waitForExposureReady(init, final):

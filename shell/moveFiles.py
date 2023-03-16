@@ -1,5 +1,4 @@
 from shutil import copytree, ignore_patterns, copyfile
-import PyInstaller.__main__
 
 import os
 path = os.getcwd()
