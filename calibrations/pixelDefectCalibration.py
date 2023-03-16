@@ -1,6 +1,5 @@
 import threading
 
-from util.LightDelay import setLightDelay, waitForReadySignal, waitForDoneSignal
 from util.compareImgs import waitForExposureReady, waitForExposureEnd
 from util.serialCOM import communicate
 

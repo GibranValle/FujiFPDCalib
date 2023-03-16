@@ -1,8 +1,6 @@
 import time
 
-from readConfigFile import getThreshold, getLowThreshold
-from util.serialCOM import readADC
-
+from util.readConfigFile import getThreshold, getLowThreshold
 
 THRESHOLD = getThreshold()
 LOW_THRESHOLD = getLowThreshold()

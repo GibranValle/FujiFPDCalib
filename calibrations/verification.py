@@ -1,7 +1,7 @@
 import threading
 import time
 
-from readConfigFile import getUltraLong, getCountDown, getCalcTime
+from util.readConfigFile import getUltraLong, getCountDown, getCalcTime
 from util.serialCOM import communicate, readADC
 from util.TimerDelay import setTimerDelay, startTimerDelay, endTimerDelay
 

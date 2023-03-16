@@ -1,7 +1,6 @@
 import pyautogui
 import time
-import variables
-from shell.activeWindow import getWindowName
+from calibrations import variables
 from shell.processRunning import process_exists
 
 
