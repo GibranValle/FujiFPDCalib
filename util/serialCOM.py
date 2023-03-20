@@ -31,6 +31,7 @@ def startListening():
             print(" *** SERIAL ERROR, CANNOT OPEN SERIAL PORT ***")
             serialError = True
             return
+        time.sleep(1.5)
 
     except AttributeError:
         print(" *** COM NOT CONNECTED ***")

@@ -1,15 +1,15 @@
 import os
+
 path = os.getcwd()
 parent = os.path.dirname(path)
-file = open(f'{path}/setup.ini', 'r')
-readData = {}
 
 
 def readIni():
+    file = open(f'{path}/setup.ini', 'r')
+    readData = {}
     lines = file.readlines()
-    size = len(lines)
 
-    for i in range(0, size):
+    for i, val in enumerate(lines):
         splited = lines[i].rstrip().split("=")
         name = splited[0]
         try:
@@ -19,6 +19,21 @@ def readIni():
         readData[name] = value
 
     return readData
+
+
+def editValue(key, newValue):
+    file = open(f'{path}/setup.ini', 'r+')
+    lines = file.readlines()
+    for i, line in enumerate(lines):
+        print(len(line))
+        if key in line:
+            name = line.split('=')[0]
+            lines[i] = f'{name}={newValue}\n'
+    separator = ''
+    text = separator.join(lines)
+    file.seek(0)
+    file.write(text)
+    file.close()
 
 
 def getPortName():
@@ -92,3 +107,19 @@ def isAutoMouse():
     data = readIni()
     mouse = data['AUTOMATIC_MOUSE']
     return mouse
+
+
+def setSkipSerial():
+    editValue('SKIP_SERIAL', 1)
+
+
+def unsetSkipSerial():
+    editValue('SKIP_SERIAL', 0)
+
+
+def setAutoMouse():
+    editValue('AUTOMATIC_MOUSE', 1)
+
+
+def unsetAutoMouse():
+    editValue('AUTOMATIC_MOUSE', 0)

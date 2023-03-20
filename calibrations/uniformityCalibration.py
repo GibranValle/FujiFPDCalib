@@ -1,6 +1,3 @@
-import time
-
-from util.LightDelay import waitForDoneSignal, waitForReadySignal
 from util.compareImgs import waitForExposureEnd, waitForExposureReady
 from util.macros import startMouseCalib
 from util.readConfigFile import isAutoMouse

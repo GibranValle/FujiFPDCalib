@@ -1,18 +1,20 @@
 import pyautogui
 import time
-from calibrations import variables
+from typing import Literal
+
+from calibrations.variables import CALIB_FPD, OFFSET, DEFECT, FIELD_CALIBRATION, MUTL_CALIBRATION, RIGHT_OPTIONS, \
+    LEFT_OPTIONS, MUTL_CALIBRATION_CLOSE, DEFECT_SOLID, PIXEL_DEFECT, SHADING, UNIFORMITY, RUPCTOOL_DIR, RUPCTOOL_EXE, \
+    RUPCTOOL_CLOSE, MCU0, MUTL
 from shell.processRunning import process_exists
+from shell.activeWindow import getWindowName
+_TYPES = Literal["RUPCTOOLS", "MUTL"]
 
 
-def moveCursorandClick(x, y, d=1):
+def moveCursorAndClick(x, y, d=1):
     # print(pyautogui.size())
     pyautogui.moveTo(x, y, duration=d)
     pyautogui.click(x, y)
-
-
-def pressWindows():
-    pyautogui.typewrite(["win"])
-    time.sleep(0.5)
+    time.sleep(.2)
 
 
 def changeTab(presses=1):
@@ -26,197 +28,116 @@ def changeTab(presses=1):
 def typeTextEnter(string):
     # pyautogui.typewrite("rupctool")
     pyautogui.typewrite(string)
-    time.sleep(0.5)
+    time.sleep(0.2)
     pyautogui.typewrite(["enter"])
-    time.sleep(0.5)
+    time.sleep(0.2)
 
 
-def typeText(string):
-    # pyautogui.typewrite("rupctool")
-    pyautogui.typewrite(string)
-    time.sleep(0.5)
+def startFDPOptionCalib():
+    moveCursorAndClick(CALIB_FPD)
+    moveCursorAndClick(CALIB_FPD)
+    moveCursorAndClick(FIELD_CALIBRATION)
 
 
-# ---------------- complex options
-def openRequest(appName):    
+def look4Window(windowName):
+    index = getWindowName().find(windowName)
+    i = 0
+    while index < 0:
+        print(getWindowName())
+        i += 1
+        changeTab(i)
+        index = getWindowName().find(windowName)
+        time.sleep(0.1)
+        if i > 12:
+            print(' ** CANNOT FIND OPEN PROGRAM PLEASE CONTACT SUPPORT **')
+            return
+    return
+
+
+# ---------------- comple
+
+
+def openRequest(appName: _TYPES):
     if appName == 'RUPCTOOLS':
         if process_exists('rupc'):
-            return False
+            look4Window('RU')
         openRUPcTools()
-        return True
 
     if appName == 'MUTL':
-        if process_exists('rupc'):
-            return False
+        if process_exists('mutl'):
+            look4Window('MUTL')
         openMUTLCalibMenu()
-        return True
 
 
-def closeRequest(appName):
+def closeRequest(appName: _TYPES):
     if appName == 'RUPCTOOLS':
         if process_exists('rupc'):
-            openRUPcTools()
-            return True
-        return False
+            look4Window('RU')
+            closeRUPcTools()
 
-    elif appName == 'MUTL':
-        if process_exists('rupc'):
-            openMUTLCalibMenu()
-            return True
-        return False
+    if appName == 'MUTL':
+        if process_exists('mutl'):
+            look4Window('MUTL')
+            closeMUTLCalibMenu()
 
 
 def openRUPcTools():
-    time.sleep(0.5)
-    pressWindows()
-    time.sleep(0.5)
+    pyautogui.typewrite(["win"])
+    time.sleep(0.2)
     typeTextEnter("cmd")
-    time.sleep(0.5)
-    typeTextEnter(variables.RUPCTOOL_DIR)
-    time.sleep(0.5)
-    typeTextEnter(variables.RUPCTOOL_EXE)
-    time.sleep(0.5)
+    time.sleep(0.2)
+    typeTextEnter(RUPCTOOL_DIR)
+    time.sleep(0.2)
+    typeTextEnter(RUPCTOOL_EXE)
 
 
 def closeRUPcTools():
-    time.sleep(0.5)
-    moveCursorandClick(variables.RUPCTOOL_CLOSE)
-    time.sleep(0.5)
+    moveCursorAndClick(RUPCTOOL_CLOSE)
 
 
 def openMUTLCalibMenu():
-    time.sleep(0.5)
-    moveCursorandClick(variables.MCU0)
-    time.sleep(0.5)
-    moveCursorandClick(variables.MUTL)
-    time.sleep(0.5)
-    moveCursorandClick(variables.RIGHT_OPTIONS)
-    time.sleep(0.5)
-    moveCursorandClick(variables.MUTL_CALIBRATION)
+    moveCursorAndClick(MCU0)
+    moveCursorAndClick(MUTL)
+    moveCursorAndClick(RIGHT_OPTIONS)
+    moveCursorAndClick(MUTL_CALIBRATION)
 
 
 def closeMUTLCalibMenu():
-    time.sleep(0.5)
-    moveCursorandClick(variables.MUTL_CALIBRATION_CLOSE)
-    time.sleep(0.5)
+    moveCursorAndClick(MUTL_CALIBRATION_CLOSE)
 
 
 def selectCalibMUTL():
-    time.sleep(0.5)
-    moveCursorandClick(variables.LEFT_OPTIONS)
-    time.sleep(0.1)
-    moveCursorandClick(variables.LEFT_OPTIONS)
-    time.sleep(0.5)
-    moveCursorandClick(variables.RIGHT_OPTIONS)
-    time.sleep(0.5)
-    moveCursorandClick(variables.MUTL_CALIBRATION)
+    moveCursorAndClick(LEFT_OPTIONS)
+    moveCursorAndClick(LEFT_OPTIONS)
+    moveCursorAndClick(RIGHT_OPTIONS)
+    moveCursorAndClick(MUTL_CALIBRATION)
 
 
 def clickOffsetCalibration():
-    time.sleep(0.5)
-    moveCursorandClick(variables.OFFSET)
-    time.sleep(0.5)
-    moveCursorandClick(variables.CALIB_FPD)
-    time.sleep(0.5)
-    moveCursorandClick(variables.CALIB_FPD)
-    time.sleep(0.5)
-    moveCursorandClick(variables.FIELD_CALIBRATION)
-    time.sleep(0.5)
+    moveCursorAndClick(OFFSET)
+    startFDPOptionCalib()
 
 
 def clickDefectCalibration():
-    time.sleep(0.5)
-    moveCursorandClick(variables.DEFECTE)
-    time.sleep(0.5)
-    moveCursorandClick(variables.CALIB_FPD)
-    time.sleep(0.5)
-    moveCursorandClick(variables.CALIB_FPD)
-    time.sleep(0.5)
-    moveCursorandClick(variables.FIELD_CALIBRATION)
-    time.sleep(0.5)
+    moveCursorAndClick(DEFECT)
+    startFDPOptionCalib()
 
 
 def clickDefectSolidCalibration():
-    time.sleep(0.5)
-    moveCursorandClick(variables.DEFECT_SOLID)
-    time.sleep(0.5)
-    moveCursorandClick(variables.CALIB_FPD)
-    time.sleep(0.5)
-    moveCursorandClick(variables.CALIB_FPD)
-    time.sleep(0.5)
-    moveCursorandClick(variables.FIELD_CALIBRATION)
-    time.sleep(0.5)
+    moveCursorAndClick(DEFECT_SOLID)
+    startFDPOptionCalib()
 
 
 def clickPixelDefectCalibration():
-    time.sleep(0.5)
-    moveCursorandClick(variables.PIXEL_DEFECT)
-    time.sleep(0.5)
-    moveCursorandClick(variables.CALIB_FPD)
-    time.sleep(0.5)
-    moveCursorandClick(variables.CALIB_FPD)
-    time.sleep(0.5)
-    moveCursorandClick(variables.FIELD_CALIBRATION)
-    time.sleep(0.5)
+    moveCursorAndClick(PIXEL_DEFECT)
+    startFDPOptionCalib()
 
 
 def clickShadingCalibration():
-    time.sleep(0.5)
-    moveCursorandClick(variables.SHADING)
-    time.sleep(0.5)
-    moveCursorandClick(variables.CALIB_FPD)
-    time.sleep(0.5)
-    moveCursorandClick(variables.CALIB_FPD)
-    time.sleep(0.5)
-    moveCursorandClick(variables.FIELD_CALIBRATION)
-    time.sleep(0.5)
+    moveCursorAndClick(SHADING)
+    startFDPOptionCalib()
 
 
 def clickUniformityCalibration():
-    time.sleep(0.5)
-    moveCursorandClick(variables.UNIFORMITY)
-    time.sleep(0.5)
-    moveCursorandClick(variables.CALIB_FPD)
-    time.sleep(0.5)
-    moveCursorandClick(variables.CALIB_FPD)
-    time.sleep(0.5)
-    moveCursorandClick(variables.FIELD_CALIBRATION)
-    time.sleep(0.5)
-
-
-# TODO ADVANCED FUNTIONS IN DEVELOPMENT
-def deleteMU0():
-    moveCursorandClick(variables.MU0)
-    moveCursorandClick(variables.DELETE_RU)
-
-
-def deleteMCU0():
-    moveCursorandClick(variables.MCU0)
-    moveCursorandClick(variables.DELETE_RU)
-
-
-def addMU0():
-    moveCursorandClick(variables.NEW_RU)
-    moveCursorandClick(variables.RU_NAME)
-    typeText("MU0")
-    moveCursorandClick(variables.RU_IP)
-    typeText("192168000100")
-    moveCursorandClick(variables.PING)
-
-
-def addMCU0():
-    moveCursorandClick(variables.NEW_RU)
-    moveCursorandClick(variables.RU_NAME)
-    typeText("MCU0")
-    moveCursorandClick(variables.RU_IP)
-    typeText("192168000101")
-    moveCursorandClick(variables.PING)
-
-
-def addBPY():
-    moveCursorandClick(variables.NEW_RU)
-    moveCursorandClick(variables.RU_NAME)
-    typeText("BPY")
-    moveCursorandClick(variables.RU_IP)
-    typeText("192168000102")
-    moveCursorandClick(variables.PING)
+    moveCursorAndClick(UNIFORMITY)
+    startFDPOptionCalib()
