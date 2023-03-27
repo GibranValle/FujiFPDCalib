@@ -1,5 +1,5 @@
 import time
-from util.mouseKeyboard import openRequest, changeTab, clickOffsetCalibration, clickDefectCalibration, \
+from util.mouseKeyboard import openRequest, clickOffsetCalibration, clickDefectCalibration, \
     clickDefectSolidCalibration, clickPixelDefectCalibration, clickShadingCalibration, clickUniformityCalibration
 
 

@@ -1,32 +1,24 @@
-import threading
-
-from util.compareImgs import waitForExposureReady, waitForExposureEnd
-from util.macros import startMouseCalib
-from util.readConfigFile import isAutoMouse
+from util.delayManager import waitForExposureReady, waitForExposureEnd
 from util.serialCOM import communicate
+from calibrations.exposureCalib import initMessage, exposureMessage, endMessage
 
 
-def defectSolidCalib(exposures=1):
-    print("Defect solid calibration selected")
-    print("Estimated waiting time: 5 mins")
+def defectSolidCalib(timer, exposures=1):
+    initMessage('Defect solid', 5)
+    print(f'{exposures} total exposures needed')
     # TODO MOUSE CALIB
-    if isAutoMouse():
-        startMouseCalib('defect-solid')
     # wait 500 secs OR wait SS
-    waitForExposureReady(0, 500)
-    print(f"Exposures required: {exposures}")
-    print(f"\n<-- Requesting exposure 1 of {exposures} -->\n")
+    if not timer:
+        waitForExposureReady(1, 500)
+    exposureMessage(1, exposures)
     comError = communicate("S")
     if comError:
         return
-    print(" ----- UNDER EXPOSURE ------\n")
-    waitForExposureEnd(0, 10)
-
-    print(" <-- Requesting end of exposure -->")
+    print("\r ----- UNDER EXPOSURE ------")
+    waitForExposureEnd(1, 5, timer)
+    print(" <-- Requesting end of exposure -->", end='')
     comError = communicate("X")
     if comError:
         return
-    print(" --> Exposure done <--")
-
-    print("\nCalibration completed successfully please check AWS")
-    print("----------------------------------------------------")
+    print("\r--> Exposure done <--")
+    endMessage()

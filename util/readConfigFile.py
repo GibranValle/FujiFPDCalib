@@ -95,31 +95,3 @@ def getCalcTime():
     data = readIni()
     duration = data['CALCULATION_TIME']
     return duration
-
-
-def isSerialSkip():
-    data = readIni()
-    skip = data['SKIP_SERIAL']
-    return skip
-
-
-def isAutoMouse():
-    data = readIni()
-    mouse = data['AUTOMATIC_MOUSE']
-    return mouse
-
-
-def setSkipSerial():
-    editValue('SKIP_SERIAL', 1)
-
-
-def unsetSkipSerial():
-    editValue('SKIP_SERIAL', 0)
-
-
-def setAutoMouse():
-    editValue('AUTOMATIC_MOUSE', 1)
-
-
-def unsetAutoMouse():
-    editValue('AUTOMATIC_MOUSE', 0)

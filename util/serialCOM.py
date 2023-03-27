@@ -2,7 +2,7 @@ import time
 
 import serial
 import serial.tools.list_ports
-from util.readConfigFile import getPortName, isEchoEnable, isSerialSkip
+from util.readConfigFile import getPortName, isEchoEnable
 # global variables for SERIAL COM
 arduino = None
 buffer = ''
@@ -14,14 +14,12 @@ serialError = False
 
 def getSerialError():
     global serialError
-    if isSerialSkip():
-        return False
     return serialError
 
 
 def startListening():
     global serialError
-    global arduino, isListening, buffer, response, waitingResponse
+    global arduino, isListening, buffer, response, waitingResponse, offlineMode
     try:
         arduino = advancedSerialInit()
         if arduino.isOpen():
@@ -111,9 +109,11 @@ def findItem(portsFound, matchingText):
 
 
 def advancedSerialInit():
+    portName = getPortName()
     foundPorts = getPorts()
-    connectPort = findItem(foundPorts, getPortName())
-
+    connectPort = findItem(foundPorts, portName)
+    print(f"Looking for {portName}")
     if connectPort != '':
+        print(f'{portName} found in {connectPort}')
         return serial.Serial(connectPort, 9600)
 

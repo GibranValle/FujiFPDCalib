@@ -1,11 +1,7 @@
-import time
-
 import numpy as np
 import cv2
 import pyautogui
-
 import os
-
 path = os.getcwd()
 
 
@@ -73,36 +69,4 @@ def isStandBy():
     elif status == 'blocked':
         print("Unit is NOT ready to perform exposure")
         return False
-    elif status == -1:
-        #print(" ** CANNOT READ UNIT STATUS PLEASE VERIFY **")
-        return -1
 
-
-def setSSDelay(init, final, standByWanted=True):
-    counter = init
-    offset = 1 if final > init else -1
-    for i in range(init, final):
-        counter += offset
-        print(f"\rWaiting: {counter}s", end='')
-        time.sleep(1)
-        status = isStandBy()
-        if standByWanted and status:
-            print("\n\n ** MU0 IS READY TO CONTINUE... ABORTING COUNTDOWN **", end='')
-
-            break
-        elif not standByWanted and not status:
-            print("\n\n ** MU0 IS READY TO CONTINUE... ABORTING COUNTDOWN **", end='')
-            break
-
-        if standByWanted:
-            print(f'Waiting for exposure ready signal{counter}s', end='')
-        elif not standByWanted:
-            print(f'Waiting for exposure end{counter}s', end='')
-
-
-def waitForExposureReady(init, final):
-    setSSDelay(init, final, standByWanted=True)
-
-
-def waitForExposureEnd(init, final):
-    setSSDelay(init, final, standByWanted=False)
