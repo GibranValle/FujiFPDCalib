@@ -11,14 +11,12 @@ def pixedDefectCalib(timer, exposures=1):
     if not timer:
         waitForExposureReady(1, 500)
     exposureMessage(1, exposures)
-    comError = communicate("S")
-    if comError:
+    if not communicate("S"):
         return
     print("\r----- UNDER EXPOSURE ------")
     waitForExposureEnd(1, 5, timer)
     print(" <-- Requesting end of exposure -->", end='')
-    comError = communicate("X")
-    if comError:
+    if not communicate("X"):
         return
     print("\r--> Exposure done <--")
     endMessage()

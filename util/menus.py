@@ -4,7 +4,7 @@ from calibrations.noExposureCalib import offsetCalib, defectCalib
 from calibrations.pixelDefectCalibration import pixedDefectCalib
 from calibrations.shadingCalibration import shadingCalib
 from calibrations.uniformityCalibration import uniformityCalib
-from calibrations.verification import mAVerification
+from calibrations.maFullCalib import mAFullCalibration
 from util.macros import startMouseCalib
 from util.mouseKeyboard import openRequest, closeRequest
 
@@ -22,7 +22,7 @@ def mainMenu():
 
 
 def handswitchMenu():
-    print(' 1) Defect-solid\n 2) Pixel-defect\n 3) Shading\n 4) X-ray uniformity\n 5) mA Verification')
+    print(' 1) Defect-solid\n 2) Pixel-defect\n 3) Shading\n 4) X-ray uniformity\n 5) mA Full calibration')
     print(' 0) Return to main menu')
 
 
@@ -38,7 +38,7 @@ def handswitchSelection(timer):
     elif selection == '4':
         uniformityCalib(timer)
     elif selection == '5':
-        mAVerification(timer)
+        mAFullCalibration(timer)
     elif selection == '0':
         return
 

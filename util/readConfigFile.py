@@ -1,5 +1,4 @@
 import os
-
 path = os.getcwd()
 parent = os.path.dirname(path)
 
@@ -8,7 +7,6 @@ def readIni():
     file = open(f'{path}/setup.ini', 'r')
     readData = {}
     lines = file.readlines()
-
     for i, val in enumerate(lines):
         splited = lines[i].rstrip().split("=")
         name = splited[0]
@@ -17,7 +15,6 @@ def readIni():
         except ValueError:
             value = splited[1]
         readData[name] = value
-
     return readData
 
 
@@ -42,40 +39,10 @@ def getPortName():
     return str(port)
 
 
-def getShort():
+def getMACalibDuration():
     data = readIni()
-    duration = data['SHORT_SHOT']
+    duration = data['MA_FULL_CALIB_DURATION']
     return duration
-
-
-def getLong():
-    data = readIni()
-    duration = data['LONG_SHOT']
-    return duration
-
-
-def getUltraLong():
-    data = readIni()
-    duration = data['ULTRA_LONG_SHOT']
-    return duration
-
-
-def getThreshold():
-    data = readIni()
-    value = data['THRESHOLD']
-    return value
-
-
-def getLowThreshold():
-    data = readIni()
-    value = data['THRESHOLD']
-    return value
-
-
-def getMaxCount():
-    data = readIni()
-    value = data['COUNT_TO_CONTINUE']
-    return value
 
 
 def getCountDown():
@@ -84,14 +51,14 @@ def getCountDown():
     return value
 
 
-def isEchoEnable():
-    data = readIni()
-    value = data['ECHO']
-    boolValue = True if value else False
-    return boolValue
-
-
 def getCalcTime():
     data = readIni()
     duration = data['CALCULATION_TIME']
     return duration
+
+
+def isSerialEchoEnable():
+    data = readIni()
+    value = data['ECHO']
+    boolValue = True if value else False
+    return boolValue

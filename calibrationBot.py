@@ -3,11 +3,21 @@
 import os
 import threading
 from util.menus import mainMenu, handswitchMenu, handswitchSelection, mouseMenu, mouseOptions
-from util.serialCOM import startListening, endListening, getSerialError
+from util.serialCOM import startListening, endListening, getSerialError, communicate
+
 isRunning = True
 
 
+def error():
+    global isRunning
+    if not communicate("X"):
+        print(' ** PLEASE DISCONNECT DEVICE MANUALLY **')
+    isRunning = False
+    print("\nPREMATURE CLOSE REQUEST...")
+    endListening()
 # ------------------------------------------- MAIN -------------------------------------------------
+
+
 def main():
     global isRunning
     offlineMode = False
@@ -18,12 +28,9 @@ def main():
     os.system('cls')
     if getSerialError():
         print('Continue in offline Mode: ')
-        try:
-            select = input('[y/n]: ')
-            if select == 'y' or select == 'Y':
-                offlineMode = True
-        except KeyboardInterrupt:
-            print("\nFINISHING...")
+        select = input('[y/n]: ')
+        if select == 'y' or select == 'Y':
+            offlineMode = True
 
     while isRunning:
         if offlineMode:
@@ -31,45 +38,36 @@ def main():
             print('Available emulator modes:')
             print(' 1) Mouse (M) [DEVELOPMENT]')
             print(' 0) Exit')
-            try:
-                select = input('Selected option: ')
-                if select == '1':
-                    mouseMenu()
-                    mouseOptions()
-                elif select == '0':
-                    print("\nFINISHING...")
-                    isRunning = False
-                    return
-            except KeyboardInterrupt:
+            select = input('Selected option: ')
+            if select == '1':
+                mouseMenu()
+                mouseOptions()
+            elif select == '0':
                 print("\nFINISHING...")
                 isRunning = False
-                endListening()
+                return
 
         else:
             if getSerialError():
                 print(' ** Verify connection with handswitch emulator **')
                 break
 
-            try:
-                select = mainMenu()
-                if select == '1':  # HandSwitch with Timer
-                    handswitchMenu()
-                    handswitchSelection(timer=True)
-                elif select == '2':  # HandSwitch Smart
-                    handswitchMenu()
-                    handswitchSelection(timer=False)
-                elif select == '3':  # Mouse
-                    mouseMenu()
-                    mouseOptions()
-                elif select == '4':  # HSS+M
-                    # TODO
-                    print('NOT IMPLEMENTED YET')
-                elif select == '0':
-                    isRunning = False
-                    endListening()
-            except KeyboardInterrupt:
-                print("\nFINISHING...")
+            select = mainMenu()
+            if select == '1':  # HandSwitch with Timer
+                handswitchMenu()
+                handswitchSelection(timer=True)
+            elif select == '2':  # HandSwitch Smart
+                handswitchMenu()
+                handswitchSelection(timer=False)
+            elif select == '3':  # Mouse
+                mouseMenu()
+                mouseOptions()
+            elif select == '4':  # HSS+M
+                # TODO
+                print('NOT IMPLEMENTED YET')
+            elif select == '0':
                 isRunning = False
+                error()
                 endListening()
 # ------------------------------------------- MAIN -------------------------------------------------
 

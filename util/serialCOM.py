@@ -1,9 +1,8 @@
 import time
-
 import serial
 import serial.tools.list_ports
-from util.readConfigFile import getPortName, isEchoEnable
-# global variables for SERIAL COM
+from util.readConfigFile import getPortName, isSerialEchoEnable
+
 arduino = None
 buffer = ''
 isListening = True
@@ -48,7 +47,7 @@ def startListening():
         # data to read
         elif arduino.in_waiting:
             response = arduino.readline().decode('ascii').rstrip()
-            print(response) if isEchoEnable() else 0
+            print(response) if isSerialEchoEnable() else 0
             if response != '':
                 waitingResponse = False
 
@@ -56,11 +55,9 @@ def startListening():
 def endListening():
     global isListening
     isListening = False
-    try:
-        arduino.close()
-        time.sleep(2)
-    except AttributeError:
-        pass
+    arduino.close()
+    time.sleep(2)
+    print(' -- PROGRAM ABORTION SUCCESSFULLY --')
 
 
 def write2Read(message):
@@ -75,19 +72,9 @@ def write2Read(message):
 def communicate(message):
     res = write2Read(message)
     if res == message:
-        comError = False
-        return comError
+        return True
     print(" *** COMMUNICATION ERROR ***")
-    comError = True
-    return comError
-
-
-def readADC():
-    res = write2Read("M")
-    if len(res) > 2:
-        value = int(res[2:])
-        return value
-    return -1
+    return False
 
 
 def getPorts():
@@ -101,7 +88,6 @@ def findItem(portsFound, matchingText):
     for i in range(0, numConnections):
         port = portsFound[i]
         strPort = str(port)
-
         if matchingText in strPort:
             splitPort = strPort.split(' ')
             commPort = splitPort[0]
@@ -112,8 +98,6 @@ def advancedSerialInit():
     portName = getPortName()
     foundPorts = getPorts()
     connectPort = findItem(foundPorts, portName)
-    print(f"Looking for {portName}")
     if connectPort != '':
-        print(f'{portName} found in {connectPort}')
         return serial.Serial(connectPort, 9600)
 
