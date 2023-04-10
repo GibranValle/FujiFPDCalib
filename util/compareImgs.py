@@ -44,29 +44,33 @@ def getXRayIconSmall():
     return X_0, Y_0, X_1, Y_1
 
 
-def scanXRayIcon():
+def compareStandByIcon():
     img = getSS()
     saveXRayIcon(img)
     imgREF1 = cv2.imread(f'{path}/img/xray_standby.png')
+    imgComp = cv2.imread(f'{path}/img/xray_icon.png')
+    error = mse(imgREF1, imgComp)
+    return  error
+
+
+def compareBlockIcon():
+    img = getSS()
+    saveXRayIcon(img)
     imgREF2 = cv2.imread(f'{path}/img/xray_blocked.png')
     imgComp = cv2.imread(f'{path}/img/xray_icon.png')
-    error1 = mse(imgREF1, imgComp)
-    error2 = mse(imgREF2, imgComp)
-    print("Image matching Error between the two images:", error1, error2)
-    if error1 < 10:
-        return 'stdby'
-    elif error2 < 10:
-        return 'blocked'
-    else:
-        return -1
+    error = mse(imgREF2, imgComp)
+    return error
 
 
 def isStandBy():
-    status = scanXRayIcon()
-    if status == 'stdby':
-        print("Unit is ready to perform exposure")
+    error = compareStandByIcon()
+    if error < 10:
         return True
-    elif status == 'blocked':
-        print("Unit is NOT ready to perform exposure")
-        return False
+    return False
 
+
+def isBlocked():
+    error = compareBlockIcon()
+    if error < 10:
+        return True
+    return False

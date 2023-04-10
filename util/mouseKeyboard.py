@@ -10,27 +10,26 @@ from shell.activeWindow import getWindowName
 _TYPES = Literal["RUPCTOOLS", "MUTL"]
 
 
-def moveCursorAndClick(x, y, d=1):
-    # print(pyautogui.size())
+def moveCursorAndClick(coordinates, d=1):
+    x, y = coordinates
     pyautogui.moveTo(x, y, duration=d)
     pyautogui.click(x, y)
-    time.sleep(.2)
+    time.sleep(1)
 
 
 def changeTab(presses=1):
     pyautogui.keyDown("altleft")
-    time.sleep(.2)
+    time.sleep(.5)
     pyautogui.press("tab", presses=presses)
-    time.sleep(.2)
+    time.sleep(.5)
     pyautogui.keyUp('alt')
 
 
 def typeTextEnter(string):
-    # pyautogui.typewrite("rupctool")
+    time.sleep(1)
     pyautogui.typewrite(string)
-    time.sleep(0.2)
+    time.sleep(1)
     pyautogui.typewrite(["enter"])
-    time.sleep(0.2)
 
 
 def startFDPOptionCalib():
@@ -47,7 +46,7 @@ def look4Window(windowName):
         i += 1
         changeTab(i)
         index = getWindowName().find(windowName)
-        time.sleep(0.1)
+        time.sleep(0.5)
         if i > 12:
             print(' ** CANNOT FIND OPEN PROGRAM PLEASE CONTACT SUPPORT **')
             return
@@ -82,12 +81,12 @@ def closeRequest(appName: _TYPES):
 
 
 def openRUPcTools():
-    pyautogui.typewrite(["win"])
-    time.sleep(0.2)
+    time.sleep(0.5)
+    pyautogui.hotkey('win', 'r')
+    time.sleep(0.5)
     typeTextEnter("cmd")
-    time.sleep(0.2)
+    time.sleep(1)
     typeTextEnter(RUPCTOOL_DIR)
-    time.sleep(0.2)
     typeTextEnter(RUPCTOOL_EXE)
 
 

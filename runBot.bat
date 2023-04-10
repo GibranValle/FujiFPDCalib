@@ -1,1 +1,2 @@
 python calibrationBot.py
+pause

@@ -2,11 +2,11 @@
 # final modification @ 27/03/2023
 import os
 import threading
-from util.menus import mainMenu, handswitchMenu, handswitchSelection, mouseMenu, mouseOptions
+from util.menus import mainMenu, handswitchMenu, handswitchSelection, mouseMenu, mouseOptions, offlineMenu
+from util.readConfigFile import getSerialDemo
 from util.serialCOM import startListening, endListening, getSerialError, communicate
 
 isRunning = True
-
 
 def error():
     global isRunning
@@ -20,13 +20,15 @@ def error():
 
 def main():
     global isRunning
+    isSelected = False
+    serialDemo = getSerialDemo()
     offlineMode = False
     print("OPENING SERIAL PORT... PLEASE WAIT")
     # use threading for SERIAL COMMUNICATION WITH ARDUINO
     serialThread = threading.Thread(target=startListening)
     serialThread.start()
     os.system('cls')
-    if getSerialError():
+    if getSerialError() and not serialDemo:
         print('Continue in offline Mode: ')
         select = input('[y/n]: ')
         if select == 'y' or select == 'Y':
@@ -34,11 +36,7 @@ def main():
 
     while isRunning:
         if offlineMode:
-            print('FPD Calibration helper by Gibran Valle FFMX [OFFLINE MODE]')
-            print('Available emulator modes:')
-            print(' 1) Mouse (M) [DEVELOPMENT]')
-            print(' 0) Exit')
-            select = input('Selected option: ')
+            select = offlineMenu()
             if select == '1':
                 mouseMenu()
                 mouseOptions()
@@ -48,27 +46,36 @@ def main():
                 return
 
         else:
-            if getSerialError():
+            if getSerialError() and not serialDemo:
                 print(' ** Verify connection with handswitch emulator **')
                 break
-
             select = mainMenu()
             if select == '1':  # HandSwitch with Timer
-                handswitchMenu()
-                handswitchSelection(timer=True)
-            elif select == '2':  # HandSwitch Smart
-                handswitchMenu()
-                handswitchSelection(timer=False)
-            elif select == '3':  # Mouse
-                mouseMenu()
-                mouseOptions()
-            elif select == '4':  # HSS+M
+                isSelected = True
+                os.system('cls')
+                while isSelected:
+                    handswitchMenu()
+                    isSelected = handswitchSelection()
+            elif select == '2':  # Mouse
+                isSelected = True
+                os.system('cls')
+                while isSelected:
+                    mouseMenu()
+                    isSelected = mouseOptions()
+            elif select == '3':  # HSS+M
+                os.system('cls')
                 # TODO
                 print('NOT IMPLEMENTED YET')
+                return
+                handswitchMenu()
+                handswitchSelection(mouse=True)
             elif select == '0':
+                os.system('cls')
                 isRunning = False
                 error()
                 endListening()
+            else:
+                os.system('cls')
 # ------------------------------------------- MAIN -------------------------------------------------
 
 

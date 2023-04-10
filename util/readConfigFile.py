@@ -62,3 +62,9 @@ def isSerialEchoEnable():
     value = data['ECHO']
     boolValue = True if value else False
     return boolValue
+
+
+def getSerialDemo():
+    data = readIni()
+    serial = data['DEMO_SERIAL']
+    return serial
