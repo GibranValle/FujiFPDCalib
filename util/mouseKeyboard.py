@@ -12,24 +12,26 @@ _TYPES = Literal["RUPCTOOLS", "MUTL"]
 
 def moveCursorAndClick(coordinates, d=1):
     x, y = coordinates
+    time.sleep(.4)
     pyautogui.moveTo(x, y, duration=d)
+    time.sleep(.4)
     pyautogui.click(x, y)
-    time.sleep(1)
 
 
 def changeTab(presses=1):
     pyautogui.keyDown("altleft")
-    time.sleep(.5)
+    time.sleep(.2)
     pyautogui.press("tab", presses=presses)
-    time.sleep(.5)
+    time.sleep(.2)
     pyautogui.keyUp('alt')
 
 
 def typeTextEnter(string):
-    time.sleep(1)
+    # pyautogui.typewrite("rupctool")
     pyautogui.typewrite(string)
-    time.sleep(1)
+    time.sleep(.4)
     pyautogui.typewrite(["enter"])
+    time.sleep(.4)
 
 
 def startFDPOptionCalib():
@@ -46,7 +48,7 @@ def look4Window(windowName):
         i += 1
         changeTab(i)
         index = getWindowName().find(windowName)
-        time.sleep(0.5)
+        time.sleep(.4)
         if i > 12:
             print(' ** CANNOT FIND OPEN PROGRAM PLEASE CONTACT SUPPORT **')
             return
@@ -58,40 +60,44 @@ def look4Window(windowName):
 
 def openRequest(appName: _TYPES):
     if appName == 'RUPCTOOLS':
-        if process_exists('rupc'):
+        if process_exists('RuPcTool.exe'):
             look4Window('RU')
         openRUPcTools()
 
     if appName == 'MUTL':
-        if process_exists('mutl'):
+        if process_exists('MUTL.exe'):
             look4Window('MUTL')
         openMUTLCalibMenu()
 
 
 def closeRequest(appName: _TYPES):
     if appName == 'RUPCTOOLS':
-        if process_exists('rupc'):
+        if process_exists('RuPcTool.exe'):
             look4Window('RU')
-            closeRUPcTools()
+            moveCursorAndClick(RUPCTOOL_CLOSE)
+            return
+        print('RuPcTool.exe not open')
 
     if appName == 'MUTL':
-        if process_exists('mutl'):
+        if process_exists('MUTL.exe'):
             look4Window('MUTL')
-            closeMUTLCalibMenu()
+            moveCursorAndClick(MUTL_CALIBRATION_CLOSE)
+            return
+        print('MUTL.exe not open')
 
 
 def openRUPcTools():
-    time.sleep(0.5)
-    pyautogui.hotkey('win', 'r')
-    time.sleep(0.5)
+    pyautogui.typewrite(["win"])
+    time.sleep(.4)
     typeTextEnter("cmd")
-    time.sleep(1)
+    time.sleep(.4)
     typeTextEnter(RUPCTOOL_DIR)
+    time.sleep(.4)
     typeTextEnter(RUPCTOOL_EXE)
-
-
-def closeRUPcTools():
-    moveCursorAndClick(RUPCTOOL_CLOSE)
+    time.sleep(.4)
+    look4Window('cmd')
+    time.sleep(.4)
+    typeTextEnter("exit")
 
 
 def openMUTLCalibMenu():
@@ -99,10 +105,6 @@ def openMUTLCalibMenu():
     moveCursorAndClick(MUTL)
     moveCursorAndClick(RIGHT_OPTIONS)
     moveCursorAndClick(MUTL_CALIBRATION)
-
-
-def closeMUTLCalibMenu():
-    moveCursorAndClick(MUTL_CALIBRATION_CLOSE)
 
 
 def selectCalibMUTL():

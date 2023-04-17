@@ -60,6 +60,8 @@ def mouseMenu():
     print(' 2) Close RUPCTools')
     print(' 3) Open MUTL')
     print(' 4) Close MUTL')
+    print(' 5) Look for RuPcTool')
+    print(' 6) Look for MUTL')
     print(' a) Select Offset Calibration')
     print(' b) Select Defect Calibration')
     print(' c) Select Defect solid Calibration')
@@ -76,10 +78,10 @@ def mouseOptions():
         openRequest('RUPCTOOLS')
         return True
     elif selection == '2':
-        openRequest('MUTL')
+        closeRequest('RUPCTOOLS')
         return True
     elif selection == '3':
-        closeRequest('RUPCTOOLS')
+        openRequest('MUTL')
         return True
     elif selection == '4':
         closeRequest('MUTL')

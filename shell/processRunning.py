@@ -9,9 +9,10 @@ def process_exists(process_name):
     output = output.decode('latin-1')
     # check in last line for process name
     last_line = output.strip().split('\r\n')[-1]
+    print(last_line)
     # print(last_line)
     # because Fail message could be translated
     return last_line.lower().startswith(process_name.lower())
 
 
-# print(process_exists("chrome.exe"))
+print(process_exists("chrome.exe"))

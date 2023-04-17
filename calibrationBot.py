@@ -8,6 +8,7 @@ from util.serialCOM import startListening, endListening, getSerialError, communi
 
 isRunning = True
 
+
 def error():
     global isRunning
     if not communicate("X"):
