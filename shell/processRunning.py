@@ -13,6 +13,3 @@ def process_exists(process_name):
     # print(last_line)
     # because Fail message could be translated
     return last_line.lower().startswith(process_name.lower())
-
-
-print(process_exists("chrome.exe"))

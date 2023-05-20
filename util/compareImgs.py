@@ -20,19 +20,57 @@ def getSS():
 
 def saveXRayIcon(img):
     width, height = pyautogui.size()
-    if height > 1000:
+    if height >= 1100:
         xray_box = getXRayIcon()
+    elif height >= 2000:
+        xray_box = getXRayIconLarge()
     else:
         xray_box = getXRayIconSmall()
     xray_icon = img.crop(xray_box)
     xray_icon.save(f'{path}/img/xray_icon.png')
 
 
+def saveXRayIconYellow(img):
+    width, height = pyautogui.size()
+    if height >= 1100:
+        xray_box = getYellowXRayIcon()
+    elif height >= 2000:
+        xray_box = getYellowXRayIconLarge()
+    else:
+        xray_box = getXRayIconSmall()
+    xray_icon = img.crop(xray_box)
+    xray_icon.save(f'{path}/img/xray_icon_yellow.png')
+
+
 def getXRayIcon():
-    X_0 = 1095
-    Y_0 = 1520
-    X_1 = 1155
-    Y_1 = 1580
+    X_0 = 1095  #1410
+    Y_0 = 1520  #1955
+    X_1 = 1155  #1497
+    Y_1 = 1580  #2020
+    return X_0, Y_0, X_1, Y_1
+
+
+def getXRayIconLarge():
+    X_0 = 1410
+    Y_0 = 1955
+    X_1 = 1497
+    Y_1 = 2020
+    return X_0, Y_0, X_1, Y_1
+
+
+def getYellowXRayIcon():
+    X_0 = 897
+    Y_0 = 1196
+    X_1 = 1296
+    Y_1 = 1595
+    return X_0, Y_0, X_1, Y_1
+
+
+def getYellowXRayIconLarge():
+    X_0 = 897
+    Y_0 = 1196
+    X_1 = 1296
+    Y_1 = 1595
     return X_0, Y_0, X_1, Y_1
 
 
@@ -44,13 +82,22 @@ def getXRayIconSmall():
     return X_0, Y_0, X_1, Y_1
 
 
+def compareYellowIcon():
+    img = getSS()
+    saveXRayIconYellow(img)
+    imgREF1 = cv2.imread(f'{path}/img/xray_icon_exposing.png')
+    imgComp = cv2.imread(f'{path}/img/xray_icon_yellow.png')
+    error = mse(imgREF1, imgComp)
+    return error
+
+
 def compareStandByIcon():
     img = getSS()
     saveXRayIcon(img)
     imgREF1 = cv2.imread(f'{path}/img/xray_standby.png')
     imgComp = cv2.imread(f'{path}/img/xray_icon.png')
     error = mse(imgREF1, imgComp)
-    return  error
+    return error
 
 
 def compareBlockIcon():
@@ -60,6 +107,13 @@ def compareBlockIcon():
     imgComp = cv2.imread(f'{path}/img/xray_icon.png')
     error = mse(imgREF2, imgComp)
     return error
+
+
+def isExposing():
+    error = compareStandByIcon()
+    if error < 10:
+        return True
+    return False
 
 
 def isStandBy():

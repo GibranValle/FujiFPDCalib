@@ -56,7 +56,7 @@ def setSSDelay(init, final, standByWanted):
             if minutes >= 1:
                 text = f'* PRESS CTRL + C TO ABORT * |{minutes}m {secs}s'
             if standByWanted:
-                status = isStandBy()
+                status = '✓' if isStandBy() else '⤫'
                 text += f' Ready for exposure: {status}'
                 if status:
                     break

@@ -1,13 +1,15 @@
 import os
 
-from calibrations.exposureCalibration import defectSolidCalib, pixedDefectCalib, shadingCalib, uniformityCalib
+from calibrations.exposureCalibration import defectSolidCalib, pixedDefectCalib, shadingCalib, uniformityCalib,\
+    defectSolidStereoCalib, defectSolidTomoCalib, defectSolidBpyCalib, uniformityCalibStereo, uniformityCalibBpy, \
+    uniformityCalibTomo, uniformityCalibES
 from calibrations.maFullCalib import mAFullCalibration
 from util.macros import startMouseCalib
 from util.mouseKeyboard import openRequest, closeRequest
 
 
 def mainMenu():
-    print('FPD Calibration helper by Gibran Valle FFMX')
+    print('FPD Calibration helper v0.8.5 by Gibran Valle FFMX')
     print('Available emulator modes:')
     print(' 1) HandSwitch')
     print(' 2) Mouse [UNDER DEVELOPMENT]')
@@ -29,6 +31,9 @@ def offlineMenu():
 def handswitchMenu():
     print('Calibration options')
     print(' 1) Defect-solid\n 2) Pixel-defect\n 3) Shading\n 4) X-ray uniformity\n 5) mA Full calibration')
+    print(' a) Defect-solid (Stereo)\n b) Defect-solid (Bpy)\n c) Defect-solid (Tomo)\n'
+          ' d) X-ray uniformity (Stereo)\n e) X-ray uniformity (Bpy)\n f) X-ray uniformity (Tomo)\n'
+          ' g) X-ray uniformity (ES)\n')
     print(' 0) Return to main menu')
 
 
@@ -50,6 +55,35 @@ def handswitchSelection(mouse=False):
     elif selection == '5':
         mAFullCalibration(mouse)
         return True
+
+    elif selection.lower() == 'a':
+        defectSolidStereoCalib(mouse)
+        return True
+
+    elif selection.lower() == 'b':
+        defectSolidBpyCalib(mouse)
+        return True
+
+    elif selection.lower() == 'c':
+        defectSolidTomoCalib(mouse)
+        return True
+
+    elif selection.lower() == 'd':
+        uniformityCalibStereo(mouse)
+        return True
+
+    elif selection.lower() == 'e':
+        uniformityCalibBpy(mouse)
+        return True
+
+    elif selection.lower() == 'f':
+        uniformityCalibTomo(mouse)
+        return True
+
+    elif selection.lower() == 'g':
+        uniformityCalibES(mouse)
+        return True
+
     elif selection == '0':
         return False
 

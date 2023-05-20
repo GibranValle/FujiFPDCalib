@@ -74,7 +74,7 @@ def main():
                 os.system('cls')
                 isRunning = False
                 error()
-                endListening()
+                endListening() if serialDemo else 0
             else:
                 os.system('cls')
 # ------------------------------------------- MAIN -------------------------------------------------
