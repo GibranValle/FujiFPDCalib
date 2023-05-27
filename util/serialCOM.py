@@ -1,7 +1,8 @@
 import time
 import serial
 import serial.tools.list_ports
-from util.readConfigFile import getPortName, isSerialEchoEnable, getSerialDemo
+
+from util.readConfigFile import getPortName, isSerialEchoEnable
 
 arduino = None
 buffer = ''
@@ -70,7 +71,8 @@ def write2Read(message):
 
 
 def communicate(message):
-    if getSerialDemo():
+    from calibrationBot import getOfflineMode
+    if getOfflineMode():
         return True
     res = write2Read(message)
     if res == message:

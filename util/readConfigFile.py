@@ -64,12 +64,6 @@ def isSerialEchoEnable():
     return boolValue
 
 
-def getSerialDemo():
-    data = readIni()
-    serial = data['DEMO_SERIAL']
-    return serial
-
-
 def getMainSide():
     data = readIni()
     side = data['MAIN_SIDE']
