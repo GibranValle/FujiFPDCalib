@@ -2,6 +2,8 @@ import numpy as np
 import cv2
 import pyautogui
 import os
+
+from util.readConfigFile import getMainSide
 path = os.getcwd()
 
 
@@ -16,8 +18,10 @@ def getSize():
 
 
 def mse(img1, img2):
-    # print(img1.shape)
     h, w, e = img1.shape
+    # print(h,w,e)
+    # h1, w1, e1 = img2.shape
+    # print(h1, w1, e1)
     diff = cv2.subtract(img1, img2)
     err = np.sum(diff ** 2)
     return err / (float(h * w))
@@ -39,51 +43,71 @@ def saveXRayIcon(img, size):
     xray_icon.save(f'{path}/img/xray_icon.png')
 
 
+def saveXRayIconYellow(img, size):
+    xray_box = getYellowXRayIconSmall()
+    if size == 'm':
+        xray_box = getYellowXRayIcon()
+    elif size == 'l':
+        xray_box = getYellowXRayIconLarge()
+    xray_icon = img.crop(xray_box)
+    xray_icon.save(f'{path}/img/xray_icon_yellow.png')
+
+
 def getXRayIconSmall():
-    X_0 = 1095
+    offset = 1200 if getMainSide() != 'LEFT' else 0
+    # 60x60
+    X_0 = 1095 + offset
+    X_1 = X_0 + 60
     Y_0 = 1020
-    X_1 = 1155
-    Y_1 = 1080
+    Y_1 = Y_0 + 60
     return X_0, Y_0, X_1, Y_1
 
 
 def getXRayIcon():
-    X_0 = 1095
+    offset = 1200 if getMainSide() != 'LEFT' else 0
+    # 60x60
+    X_0 = 1095 + offset
+    X_1 = X_0 + 60
     Y_0 = 1520
-    X_1 = 1155
-    Y_1 = 1580
+    Y_1 = Y_0 + 60
     return X_0, Y_0, X_1, Y_1
 
 
 def getXRayIconLarge():
-    X_0 = 1410
+    offset = 1536 if getMainSide() != 'LEFT' else 0
+    # 65x65
+    X_0 = 1410 + offset
+    X_1 = X_0 + 65
     Y_0 = 1955
-    X_1 = 1497
-    Y_1 = 2020
+    Y_1 = Y_0 + 65
     return X_0, Y_0, X_1, Y_1
 
 
 def getYellowXRayIconSmall():
-    X_0 = 1095
-    Y_0 = 1020
-    X_1 = 1155
-    Y_1 = 1080
+    offset = 1200 if getMainSide() != 'LEFT' else 0
+    # 300 x 300
+    X_0 = 897 + offset
+    Y_0 = 781
+    X_1 = X_0 + 300
+    Y_1 = Y_0 + 300
     return X_0, Y_0, X_1, Y_1
 
 
 def getYellowXRayIcon():
-    X_0 = 897
-    Y_0 = 1196
-    X_1 = 1296
-    Y_1 = 1595
+    offset = 1200 if getMainSide() != 'LEFT' else 0
+    X_0 = 897 + offset
+    Y_0 = 1296
+    X_1 = X_0 + 300
+    Y_1 = Y_0 + 300
     return X_0, Y_0, X_1, Y_1
 
 
 def getYellowXRayIconLarge():
-    X_0 = 1233
+    offset = 1536 if getMainSide() != 'LEFT' else 0
+    X_0 = 1233 + offset
     Y_0 = 1744
-    X_1 = 1523
-    Y_1 = 2043
+    X_1 = X_0 + 300
+    Y_1 = Y_0 + 300
     return X_0, Y_0, X_1, Y_1
 
 
@@ -98,8 +122,11 @@ def compareImages(imgName, size):
 
 def compareYellowIcon():
     size = getSize()
-    name = 'xray_exposing_large' if size == 'l' else 'xray_exposing'
-    error = compareImages(name, size)
+    img = getSS()
+    saveXRayIconYellow(img, size)
+    imgREF1 = cv2.imread(f'{path}/img/xray_exposing.png')
+    imgComp = cv2.imread(f'{path}/img/xray_icon_yellow.png')
+    error = mse(imgREF1, imgComp)
     return error
 
 

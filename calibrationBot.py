@@ -4,7 +4,7 @@ import os
 import threading
 from util.menus import mainMenu, handswitchMenu, handswitchSelection, mouseMenu, mouseOptions, offlineMenu
 from util.serialCOM import startListening, endListening, getSerialError, communicate
-from util.compareImgs import saveXRayIcon, getSS, isBlocked, isExposing, isStandBy, getSize
+from util.compareImgs import saveXRayIcon, getSS, isBlocked, isExposing, isStandBy, getSize, saveXRayIconYellow
 
 isRunning = True
 offlineMode = False
@@ -28,6 +28,16 @@ def setOfflineMode(state):
     global offlineMode
     offlineMode = state
     return offlineMode
+
+
+def getTestSS():
+    size = getSize()
+    img = getSS()
+    saveXRayIcon(img, size)
+    saveXRayIconYellow(img, size)
+    print('Is exposing') if isExposing() else print('is not exposing')
+    print('Is standby') if isStandBy() else print('is not standby')
+    print('Is blocked') if isBlocked() else print('is not blocked')
 # ------------------------------------------- MAIN -------------------------------------------------
 
 
@@ -54,12 +64,8 @@ def main():
                 mouseMenu()
                 mouseOptions()
             elif select == '2':
-                size = getSize()
-                img = getSS()
-                saveXRayIcon(img, size)
-                print('Is exposing') if isExposing() else 0
-                print('Is standby') if isStandBy() else 0
-                print('Is blocked') if isBlocked() else 0
+                os.system('cls')
+                getTestSS()
             elif select == '0':
                 print("\nFINISHING...")
                 isRunning = False
@@ -91,9 +97,7 @@ def main():
                 handswitchSelection(mouse=True)
             elif select == '4':
                 os.system('cls')
-                img = getSS()
-                saveXRayIcon(img)
-                saveXRayIconYellow(img)
+                getTestSS()
             elif select == '0':
                 os.system('cls')
                 isRunning = False
