@@ -64,7 +64,7 @@ def isSerialEchoEnable():
     return boolValue
 
 
-def getMainSide():
+def getThreshold():
     data = readIni()
-    side = data['MAIN_SIDE']
+    side = data['THRESHOLD']
     return side

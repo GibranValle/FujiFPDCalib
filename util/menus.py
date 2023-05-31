@@ -14,7 +14,7 @@ def mainMenu():
     print(' 1) HandSwitch')
     print(' 2) Mouse [UNDER DEVELOPMENT]')
     print(' 3) HSS+M [UNDER DEVELOPMENT]')
-    print(' 4) Get SS icon')
+    print(' 4) Find Icons')
     print(' 0) Exit')
     select = input('Selected option: ')
     return select
@@ -24,7 +24,7 @@ def offlineMenu():
     print('FPD Calibration helper by Gibran Valle FFMX [OFFLINE MODE]')
     print('Available emulator modes:')
     print(' 1) Mouse (M) [DEVELOPMENT]')
-    print(' 2) Get SS icon')
+    print(' 2) Find Icons')
     print(' 0) Exit')
     select = input('Selected option: ')
     return select

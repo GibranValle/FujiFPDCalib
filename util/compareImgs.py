@@ -3,7 +3,6 @@ import cv2
 import pyautogui
 import os
 
-from util.readConfigFile import getMainSide
 path = os.getcwd()
 
 
@@ -34,6 +33,8 @@ def getSS():
 
 
 def saveXRayIcon(img, size):
+    img = pyautogui.screenshot(f'{path}/img/ss.png')
+
     xray_box = getXRayIconSmall()
     if size == 'm':
         xray_box = getXRayIcon()
@@ -54,9 +55,8 @@ def saveXRayIconYellow(img, size):
 
 
 def getXRayIconSmall():
-    offset = 1200 if getMainSide() != 'LEFT' else 0
     # 60x60
-    X_0 = 1095 + offset
+    X_0 = 1095
     X_1 = X_0 + 60
     Y_0 = 1020
     Y_1 = Y_0 + 60
@@ -64,9 +64,8 @@ def getXRayIconSmall():
 
 
 def getXRayIcon():
-    offset = 1200 if getMainSide() != 'LEFT' else 0
     # 60x60
-    X_0 = 1095 + offset
+    X_0 = 1095
     X_1 = X_0 + 60
     Y_0 = 1520
     Y_1 = Y_0 + 60
@@ -74,9 +73,8 @@ def getXRayIcon():
 
 
 def getXRayIconLarge():
-    offset = 1536 if getMainSide() != 'LEFT' else 0
     # 65x65
-    X_0 = 1410 + offset
+    X_0 = 1410
     X_1 = X_0 + 65
     Y_0 = 1955
     Y_1 = Y_0 + 65
@@ -84,9 +82,8 @@ def getXRayIconLarge():
 
 
 def getYellowXRayIconSmall():
-    offset = 1200 if getMainSide() != 'LEFT' else 0
     # 300 x 300
-    X_0 = 897 + offset
+    X_0 = 897
     Y_0 = 781
     X_1 = X_0 + 300
     Y_1 = Y_0 + 300
@@ -94,8 +91,7 @@ def getYellowXRayIconSmall():
 
 
 def getYellowXRayIcon():
-    offset = 1200 if getMainSide() != 'LEFT' else 0
-    X_0 = 897 + offset
+    X_0 = 897
     Y_0 = 1296
     X_1 = X_0 + 300
     Y_1 = Y_0 + 300
@@ -103,17 +99,15 @@ def getYellowXRayIcon():
 
 
 def getYellowXRayIconLarge():
-    offset = 1536 if getMainSide() != 'LEFT' else 0
-    X_0 = 1233 + offset
+    X_0 = 1233
     Y_0 = 1744
     X_1 = X_0 + 300
     Y_1 = Y_0 + 300
     return X_0, Y_0, X_1, Y_1
 
 
-def compareImages(imgName, size):
-    img = getSS()
-    saveXRayIcon(img, size)
+def compareImages(imgName):
+    saveXRayIcon()
     imgREF1 = cv2.imread(f'{path}/img/{imgName}.png')
     imgComp = cv2.imread(f'{path}/img/xray_icon.png')
     error = mse(imgREF1, imgComp)

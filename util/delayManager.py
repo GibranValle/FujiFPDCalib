@@ -1,5 +1,6 @@
 import time
-from util.compareImgs import isStandBy, isBlocked
+
+from util.location import isBlocked, isStandby, isExposing
 
 
 def clearLine():
@@ -56,7 +57,7 @@ def setSSDelay(init, final, standByWanted):
             if minutes >= 1:
                 text = f'* PRESS CTRL + C TO ABORT * |{minutes}m {secs}s'
             if standByWanted:
-                status = '✓' if isStandBy() else '⤫'
+                status = '✓' if isStandby() else '⤫'
                 text += f' Ready for exposure: {status}'
                 if status:
                     break

@@ -2,9 +2,10 @@
 # final modification @ 27/03/2023
 import os
 import threading
+
+from util.location import isBlocked, isExposing, isStandby
 from util.menus import mainMenu, handswitchMenu, handswitchSelection, mouseMenu, mouseOptions, offlineMenu
 from util.serialCOM import startListening, endListening, getSerialError, communicate
-from util.compareImgs import saveXRayIcon, getSS, isBlocked, isExposing, isStandBy, getSize, saveXRayIconYellow
 
 isRunning = True
 offlineMode = False
@@ -31,13 +32,19 @@ def setOfflineMode(state):
 
 
 def getTestSS():
-    size = getSize()
-    img = getSS()
-    saveXRayIcon(img, size)
-    saveXRayIconYellow(img, size)
-    print('Is exposing') if isExposing() else print('is not exposing')
-    print('Is standby') if isStandBy() else print('is not standby')
-    print('Is blocked') if isBlocked() else print('is not blocked')
+    x, y = isBlocked()
+    if x > 0 and y > 0:
+        print('isBlocking')
+
+    x, y = isExposing()
+    if x > 0 and y > 0:
+        print('isExposing')
+
+    x, y = isStandby()
+    if x > 0 and y > 0:
+        print('isStandby')
+
+
 # ------------------------------------------- MAIN -------------------------------------------------
 
 
