@@ -25,9 +25,24 @@ def offlineMenu():
     print('Available emulator modes:')
     print(' 1) Mouse (M) [DEVELOPMENT]')
     print(' 2) Find Icons')
+    print(' 3) Mouse cursor menu')
     print(' 0) Exit')
     select = input('Selected option: ')
     return select
+
+
+def moveCursorMenu():
+    print(' 1) Icons')
+    print(' 2) RuPCTols')
+    print(' 3) MUTL')
+    select = input('Selected option: ')
+    return select
+
+
+def iconsMenu():
+    print(' 1) Stand by')
+    print(' 2) Exposure')
+    print(' 3) Blocked')
 
 
 def handswitchMenu():

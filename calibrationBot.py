@@ -49,7 +49,7 @@ def getTestSS():
 
 
 def main():
-    print("OPENING SERIAL PORT... PLEASE WAIT", end='\n\n')
+    print("OPENING SERIAL PORT... PLEASE WAIT", end='\n')
     global isRunning
     isSelected = False
     # use threading for SERIAL COMMUNICATION WITH ARDUINO
@@ -57,12 +57,7 @@ def main():
     serialThread.start()
     os.system('cls')
     if getSerialError():
-        print('Continue in offline Mode: ')
-        select = input('[y/n]: ')
-        if select.lower() == 'y':
-            setOfflineMode(True)
-        elif select.lower() == 'n':
-            isRunning = False
+        setOfflineMode(True)
 
     while isRunning:
         if offlineMode:
@@ -71,7 +66,6 @@ def main():
                 mouseMenu()
                 mouseOptions()
             elif select == '2':
-                os.system('cls')
                 getTestSS()
             elif select == '0':
                 print("\nFINISHING...")
