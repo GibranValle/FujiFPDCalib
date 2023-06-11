@@ -1,39 +1,32 @@
 import time
 import serial
 import serial.tools.list_ports
-
-from util.readConfigFile import getPortName, isSerialEchoEnable
+from util.readConfigFile import getPortName
 
 arduino = None
 buffer = ''
 isListening = True
 response = ''
 waitingResponse = False
-serialError = False
-
-
-def getSerialError():
-    global serialError
-    return serialError
+offline = False
 
 
 def startListening():
-    global serialError
-    global arduino, isListening, buffer, response, waitingResponse, offlineMode
+    global arduino, isListening, buffer, response, waitingResponse, offline
+    from calibrationBot import endMain
     try:
         arduino = advancedSerialInit()
-        if arduino.isOpen():
-            arduino.close()
-        arduino.open()
         if not arduino.isOpen():
-            print(" *** SERIAL ERROR, CANNOT OPEN SERIAL PORT ***")
-            serialError = True
-            return
+            arduino.open()
         time.sleep(1.5)
 
     except AttributeError:
-        print(" *** COM NOT CONNECTED ***")
-        serialError = True
+        offline = True
+        return
+
+    except serial.serialutil.SerialException:
+        offline = True
+        endMain()
         return
 
     while isListening:
@@ -48,7 +41,6 @@ def startListening():
         # data to read
         elif arduino.in_waiting:
             response = arduino.readline().decode('ascii').rstrip()
-            print(response) if isSerialEchoEnable() else 0
             if response != '':
                 waitingResponse = False
 
@@ -56,9 +48,13 @@ def startListening():
 def endListening():
     global isListening
     isListening = False
-    arduino.close()
-    time.sleep(2)
-    print(' -- PROGRAM ABORTION SUCCESSFULLY --')
+    try:
+        arduino.close()
+        time.sleep(2)
+        print(' -- PROGRAM ABORTION SUCCESSFULLY -- ')
+    except AttributeError:
+        print(' -- ABORTION ANORMALLY --')
+        return
 
 
 def write2Read(message):
@@ -71,8 +67,8 @@ def write2Read(message):
 
 
 def communicate(message):
-    from calibrationBot import getOfflineMode
-    if getOfflineMode():
+    global offline
+    if offline:
         return True
     res = write2Read(message)
     if res == message:
@@ -104,4 +100,3 @@ def advancedSerialInit():
     connectPort = findItem(foundPorts, portName)
     if connectPort != '':
         return serial.Serial(connectPort, 9600)
-

@@ -55,16 +55,3 @@ def getCalcTime():
     data = readIni()
     duration = data['CALCULATION_TIME']
     return duration
-
-
-def isSerialEchoEnable():
-    data = readIni()
-    value = data['ECHO']
-    boolValue = True if value else False
-    return boolValue
-
-
-def getThreshold():
-    data = readIni()
-    side = data['THRESHOLD']
-    return side

@@ -1,6 +1,6 @@
 import time
 
-from util.delayManager import keyboardDelay
+from util.delayManager import keyboardDelay, waitTillEndYellow
 from util.readConfigFile import getMACalibDuration, getCountDown, getCalcTime
 from util.serialCOM import communicate
 
@@ -16,7 +16,7 @@ def mAFullCalibration(mouse):
     keyboardDelay(getCountDown(), 0, ' Starting exposure in: ')
     if not communicate("L"):     # REQUEST FOR LONG EXPOSURE
         return
-    keyboardDelay(getMACalibDuration(), 0, ' Under exposure... ')
+    time = waitTillEndYellow(getMACalibDuration(), 0)
     print(" <-- Requesting end of exposure -->")
     if not communicate("X"):
         return

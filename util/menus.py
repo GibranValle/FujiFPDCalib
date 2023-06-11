@@ -3,161 +3,289 @@ import os
 from calibrations.exposureCalibration import defectSolidCalib, pixedDefectCalib, shadingCalib, uniformityCalib,\
     defectSolidStereoCalib, defectSolidTomoCalib, defectSolidBpyCalib, uniformityCalibStereo, uniformityCalibBpy, \
     uniformityCalibTomo, uniformityCalibES
-from calibrations.maFullCalib import mAFullCalibration
+import util.location as loc
 from util.macros import startMouseCalib
 from util.mouseKeyboard import openRequest, closeRequest
 
 
-def mainMenu():
-    print('FPD Calibration helper v0.8.5 by Gibran Valle FFMX')
-    print('Available emulator modes:')
-    print(' 1) HandSwitch')
-    print(' 2) Mouse [UNDER DEVELOPMENT]')
-    print(' 3) HSS+M [UNDER DEVELOPMENT]')
-    print(' 4) Find Icons')
-    print(' 0) Exit')
-    select = input('Selected option: ')
-    return select
+def generateMenu(options):
+    menu = ''
+    for index, option in enumerate(options):
+        if index != 0 and index != (len(options) - 1):
+            menu += f' {index}) {option}\n'
+            continue
+        elif index == (len(options) - 1):
+            menu += f'{option}'
+        else:
+            menu += f'{option}\n'
+    return menu
 
 
-def offlineMenu():
-    print('FPD Calibration helper by Gibran Valle FFMX [OFFLINE MODE]')
-    print('Available emulator modes:')
-    print(' 1) Mouse (M) [DEVELOPMENT]')
-    print(' 2) Find Icons')
-    print(' 3) Mouse cursor menu')
-    print(' 0) Exit')
-    select = input('Selected option: ')
-    return select
+def main():
+    options = [
+        '\rAvailable emulator modes:',
+        'EXIT',
+        'Basic FPD',
+        'Stereo Bpy FPD',
+        'Tomo FPD',
+        'ES FPD',
+        'mA full Calibration',
+        'IconLocation[Test]',
+        'Automatic HS',
+        'selection: '
+    ]
+    return generateMenu(options)
 
 
-def moveCursorMenu():
-    print(' 1) Icons')
-    print(' 2) RuPCTols')
-    print(' 3) MUTL')
-    select = input('Selected option: ')
-    return select
+def basic():
+    options = [
+        'Basic FPD options:',
+        'RETURN TO MAIN MENU',
+        'Defect-solid',
+        'Pixel-defect',
+        'Shading',
+        'X-ray uniformity',
+        'selection: '
+    ]
+    return generateMenu(options)
 
 
-def iconsMenu():
-    print(' 1) Stand by')
-    print(' 2) Exposure')
-    print(' 3) Blocked')
+def runBasic(option):
+    if option == '2':
+        defectSolidCalib()
+    elif option == '3':
+        pixedDefectCalib()
+    elif option == '4':
+        shadingCalib()
+    elif option == '5':
+        uniformityCalib()
+    else:
+        return
 
 
-def handswitchMenu():
-    print('Calibration options')
-    print(' 1) Defect-solid\n 2) Pixel-defect\n 3) Shading\n 4) X-ray uniformity\n 5) mA Full calibration')
-    print(' a) Defect-solid (Stereo)\n b) Defect-solid (Bpy)\n c) Defect-solid (Tomo)\n'
-          ' d) X-ray uniformity (Stereo)\n e) X-ray uniformity (Bpy)\n f) X-ray uniformity (Tomo)\n'
-          ' g) X-ray uniformity (ES)\n')
-    print(' 0) Return to main menu')
+def stereoBpy():
+    options = [
+        'Stereo Bpy FPD options:',
+        'RETURN TO MAIN MENU',
+        'Defect-solid (Stereo)',
+        'Defect-solid (Bpy)',
+        'X-ray uniformity (Stereo)',
+        'X-ray uniformity (Bpy)',
+        'selection: '
+    ]
+    return generateMenu(options)
 
 
-def handswitchSelection(mouse=False):
-    selection = input('selected: ')
-    os.system('cls')
-    if selection == '1':
-        defectSolidCalib(mouse)
-        return True
-    elif selection == '2':
-        pixedDefectCalib(mouse)
-        return True
-    elif selection == '3':
-        shadingCalib(mouse)
-        return True
-    elif selection == '4':
-        uniformityCalib(mouse)
-        return True
-    elif selection == '5':
-        mAFullCalibration(mouse)
-        return True
-
-    elif selection.lower() == 'a':
-        defectSolidStereoCalib(mouse)
-        return True
-
-    elif selection.lower() == 'b':
-        defectSolidBpyCalib(mouse)
-        return True
-
-    elif selection.lower() == 'c':
-        defectSolidTomoCalib(mouse)
-        return True
-
-    elif selection.lower() == 'd':
-        uniformityCalibStereo(mouse)
-        return True
-
-    elif selection.lower() == 'e':
-        uniformityCalibBpy(mouse)
-        return True
-
-    elif selection.lower() == 'f':
-        uniformityCalibTomo(mouse)
-        return True
-
-    elif selection.lower() == 'g':
-        uniformityCalibES(mouse)
-        return True
-
-    elif selection == '0':
-        return False
+def runStereo(option):
+    if option == '2':
+        defectSolidStereoCalib()
+    elif option == '3':
+        defectSolidBpyCalib()
+    elif option == '4':
+        uniformityCalibStereo()
+    elif option == '5':
+        uniformityCalibBpy()
+    else:
+        return
 
 
-def mouseMenu():
-    print('Mouse options')
-    print(' 1) Open RUPCTools')
-    print(' 2) Close RUPCTools')
-    print(' 3) Open MUTL')
-    print(' 4) Close MUTL')
-    print(' 5) Look for RuPcTool')
-    print(' 6) Look for MUTL')
-    print(' a) Select Offset Calibration')
-    print(' b) Select Defect Calibration')
-    print(' c) Select Defect solid Calibration')
-    print(' d) Select Pixel defect Calibration')
-    print(' e) Select Shading Calibration')
-    print(' f) Select Uniformity Calibration')
-    print(' 0) Return to main menu\n')
+def tomo():
+    options = [
+        'Tomo FPD options:',
+        'RETURN TO MAIN MENU',
+        'Defect-solid',
+        'X-ray uniformity',
+        'selection: '
+    ]
+    return generateMenu(options)
 
 
-def mouseOptions():
-    selection = input('selected: ')
-    os.system('cls')
-    if selection == '1':
-        openRequest('RUPCTOOLS')
-        return True
-    elif selection == '2':
-        closeRequest('RUPCTOOLS')
-        return True
-    elif selection == '3':
-        openRequest('MUTL')
-        return True
-    elif selection == '4':
-        closeRequest('MUTL')
-        return True
-    elif selection == 'a':
-        startMouseCalib('offset')
-        return True
-    elif selection == 'b':
-        startMouseCalib('defect')
-        return True
-    elif selection == 'c':
-        startMouseCalib('defect-solid')
-        return True
-    elif selection == 'd':
-        startMouseCalib('pixel-defect')
-        return True
-    elif selection == 'e':
-        startMouseCalib('shading')
-        return True
-    elif selection == 'f':
-        startMouseCalib('uniformity')
-        return True
-    elif selection == '0':
-        return False
+def runTomo(option):
+    if option == '2':
+        defectSolidTomoCalib()
+    elif option == '3':
+        uniformityCalibTomo()
+    else:
+        return
 
 
+def ES():
+    options = [
+        'ES FPD options:',
+        'RETURN TO MAIN MENU',
+        'X-ray uniformity',
+        'selection: '
+    ]
+    return generateMenu(options)
 
 
+def runES(option):
+    if option == '2':
+        uniformityCalibES()
+    else:
+        return
+
+
+def iconTest():
+    options = [
+        'Icon identification options:',
+        'RETURN TO MAIN MENU',
+        'AWS status icons',
+        'RUPCTools icons',
+        'MUTL icons',
+        'FPD Calib icons',
+        'FPD Calib Opt icons'
+        'selection: '
+    ]
+    return generateMenu(options)
+
+
+def AWSicons():
+    options = [
+        'AWS icon options:',
+        'RETURN TO MAIN MENU',
+        'Stand by',
+        'Blocked',
+        'Ok red',
+        'Calib button',
+        'Field calib button',
+        'selection: '
+    ]
+    return generateMenu(options)
+
+
+def runAWS(option):
+    if option == '2':
+        return loc.stdbyIcon()
+    elif option == '3':
+        return loc.blockedIcon()
+    elif option == '4':
+        return loc.okExposure()
+    elif option == '5':
+        return loc.calib_button()
+    elif option == '6':
+        return loc.fieldCalib()
+    else:
+        return
+
+
+def ruIcons():
+    options = [
+        'RUPCTools icon options:',
+        'RETURN TO MAIN MENU',
+        'MU0',
+        'MCU0',
+        'New',
+        'Install',
+        'selection: '
+    ]
+    return generateMenu(options)
+
+
+def runRuIcons(option):
+    if option == '2':
+        return loc.MU0()
+    elif option == '3':
+        return loc.MCU0()
+    elif option == '4':
+        return loc.new()
+    elif option == '5':
+        return loc.install()
+    else:
+        return
+
+
+def mutlIcons():
+    options = [
+        'MUTL icon options:',
+        'RETURN TO MAIN MENU',
+        'calibration',
+        'calibration (opt)',
+        'left',
+        'right',
+        'selection: '
+    ]
+    return generateMenu(options)
+
+
+def runMutl(option):
+    if option == '2':
+        return loc.calibration()
+    elif option == '3':
+        return loc.calibrationOptional()
+    elif option == '4':
+        return loc.left()
+    elif option == '5':
+        return loc.right()
+    else:
+        return
+
+
+def fpdCalib():
+    options = [
+        'MUTL icon options:',
+        'RETURN TO MAIN MENU',
+        'offset',
+        'defect',
+        'defect solid',
+        'pixel defect',
+        'shading',
+        'uniformity',
+        'sensitivity',
+        'selection: '
+    ]
+    return generateMenu(options)
+
+
+def runfpdCalib(option):
+    if option == '2':
+        return loc.offset()
+    elif option == '3':
+        return loc.defect()
+    elif option == '4':
+        return loc.defectSolid()
+    elif option == '5':
+        return loc.pixelDefect()
+    elif option == '6':
+        return loc.shading()
+    elif option == '7':
+        return loc.uniformity()
+    elif option == '8':
+        return loc.sensitivity()
+    else:
+        return
+
+
+def fpdOptional():
+    options = [
+        'MUTL icon options:',
+        'RETURN TO MAIN MENU',
+        'defect solid stereo',
+        'defect solid biopsy',
+        'defect solid tomo',
+        'x-ray uniformity stereo',
+        'x-ray uniformity biopsy',
+        'x-ray uniformity tomo',
+        'x-ray uniformity ES',
+        'selection: '
+    ]
+    return generateMenu(options)
+
+
+def runOptionalCalib(option):
+    if option == '2':
+        return loc.defectSolidStereo()
+    elif option == '3':
+        return loc.defectSolidBpy()
+    elif option == '4':
+        return loc.defectSolidTomo()
+    elif option == '5':
+        return loc.uniformityStereo()
+    elif option == '6':
+        return loc.uniformityBpy()
+    elif option == '7':
+        return loc.uniformityTomo()
+    elif option == '8':
+        return loc.uniformityES()
+    else:
+        return

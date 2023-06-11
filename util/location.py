@@ -13,95 +13,123 @@ def genericCoordinates(name):
         return x, y
 
     except TypeError:
-        print('Icon not found on screen')
         return x, y
 
 
-# STUDY
-def isBlocked():
-    return genericCoordinates('xray_blocked')
-
-
+# FF_tools
 def isExposing():
-    return genericCoordinates('xray_exposing')
+    return genericCoordinates('ff/xray_exposing')
 
 
-def isStandby():
-    return genericCoordinates('xray_standby')
+# AWS
+def blockedIcon():
+    return genericCoordinates('aws/xray_blocked')
+
+
+def stdbyIcon():
+    return genericCoordinates('aws/xray_standby')
 
 
 def okExposure():
-    return genericCoordinates('ok')
+    return genericCoordinates('aws/ok')
 
 
 def calib_button():
-    return genericCoordinates('calib_button')
+    return genericCoordinates('aws/calib_button')
 
 
 def fieldCalib():
-    return genericCoordinates('fieldcalib_button')
+    return genericCoordinates('aws/fieldcalib_button')
 
 
 # RUPCTOOL SCREEN
 def MU0():
-    return genericCoordinates('MU0')
+    return genericCoordinates('ru/MU0')
 
 
 def MCU0():
-    return genericCoordinates('MCU0')
+    return genericCoordinates('ru/MCU0')
 
 
 def new():
-    return genericCoordinates('new')
+    return genericCoordinates('ru/new')
 
 
 def install():
-    return genericCoordinates('install')
+    return genericCoordinates('ru/install')
 
 
 # MUTL
 def calibration():
-    return genericCoordinates('calibration')
+    return genericCoordinates('mutl/calibration')
 
 
 def calibrationOptional():
-    return genericCoordinates('calibration_option')
+    return genericCoordinates('mutl/calibration_option')
 
 
 def left():
-    return genericCoordinates('left')
+    return genericCoordinates('mutl/left')
 
 
 def right():
-    return genericCoordinates('right')
+    return genericCoordinates('mutl/right')
 
 
 #CALIBRATION MENU
 def offset():
-    return genericCoordinates('calib_offset')
+    return genericCoordinates('mutl/calib_offset')
 
 
 def defect():
-    return genericCoordinates('calib_defect')
+    return genericCoordinates('mutl/calib_defect')
 
 
 def defectSolid():
-    return genericCoordinates('calib_defect_solid')
+    return genericCoordinates('mutl/calib_defect_solid')
+
+
+def defectSolidStereo():
+    return genericCoordinates('mutl/calib_defect_solid_stereo')
+
+
+def defectSolidBpy():
+    return genericCoordinates('mutl/calib_defect_solid_bpy')
+
+
+def defectSolidTomo():
+    return genericCoordinates('mutl/calib_defect_solid_tomo')
 
 
 def pixelDefect():
-    return genericCoordinates('calib_pixel_defect')
+    return genericCoordinates('mutl/calib_pixel_defect')
 
 
 def shading():
-    return genericCoordinates('calib_shading')
+    return genericCoordinates('mutl/calib_shading')
 
 
 def uniformity():
-    return genericCoordinates('calib_uniformity')
+    return genericCoordinates('mutl/calib_uniformity')
+
+
+def uniformityStereo():
+    return genericCoordinates('mutl/calib_uniformity_stereo')
+
+
+def uniformityBpy():
+    return genericCoordinates('mutl/calib_uniformity_bpy')
+
+
+def uniformityTomo():
+    return genericCoordinates('mutl/calib_uniformity_tomo')
+
+
+def uniformityES():
+    return genericCoordinates('mutl/calib_uniformity_es')
 
 
 def sensitivity():
-    return genericCoordinates('calib_sensitivity')
+    return genericCoordinates('mutl/calib_sensitivity')
 
 

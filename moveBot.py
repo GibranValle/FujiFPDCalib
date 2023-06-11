@@ -1,4 +1,4 @@
-from util.location import isStandby, isExposing, isBlocked, okExposure, MU0, MCU0, install, new, left, right, \
+from util.location import stdbyIcon, isExposing, blockedIcon, okExposure, MU0, MCU0, install, new, left, right, \
     calibration, calibrationOptional, offset, defect, defectSolid, pixelDefect, shading, sensitivity, uniformity
 import pyautogui
 
@@ -40,13 +40,13 @@ def main():
 
         x, y = 0, 0
         if select == '1':
-            x, y = isStandby()
+            x, y = stdbyIcon()
 
         if select == '2':
             x, y = isExposing()
 
         if select == '3':
-            x, y = isBlocked()
+            x, y = blockedIcon()
 
         if select == '4':
             x, y = okExposure()

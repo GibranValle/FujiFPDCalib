@@ -2,11 +2,10 @@
 # final modification @ 27/03/2023
 import os
 import threading
-
-from util.location import isBlocked, isExposing, isStandby
-from util.menus import mainMenu, handswitchMenu, handswitchSelection, mouseMenu, mouseOptions, offlineMenu
-from util.serialCOM import startListening, endListening, getSerialError, communicate
-
+import pyautogui
+from calibrations.maFullCalib import mAFullCalibration
+import util.menus as menu
+from util.serialCOM import startListening, endListening, communicate
 isRunning = True
 offlineMode = False
 
@@ -20,94 +19,147 @@ def error():
     endListening()
 
 
-def getOfflineMode():
-    global offlineMode
-    return offlineMode
+def endMain():
+    global isRunning
+    isRunning = False
+    print(' ** COM DISCONNECTED **')
 
 
-def setOfflineMode(state):
-    global offlineMode
-    offlineMode = state
-    return offlineMode
-
-
-def getTestSS():
-    x, y = isBlocked()
-    if x > 0 and y > 0:
-        print('isBlocking')
-
-    x, y = isExposing()
-    if x > 0 and y > 0:
-        print('isExposing')
-
-    x, y = isStandby()
-    if x > 0 and y > 0:
-        print('isStandby')
+def createAvailable(init, final):
+    available = ['']
+    for x in range(init, final + 1):
+        available.append(f'{x}')
+    return available
 
 
 # ------------------------------------------- MAIN -------------------------------------------------
 
 
 def main():
-    print("OPENING SERIAL PORT... PLEASE WAIT", end='\n')
-    global isRunning
-    isSelected = False
-    # use threading for SERIAL COMMUNICATION WITH ARDUINO
-    serialThread = threading.Thread(target=startListening)
-    serialThread.start()
-    os.system('cls')
-    if getSerialError():
-        setOfflineMode(True)
+    mainAVL = createAvailable(2, 9)
+    basicAVL = stereoAVL = ruIconsAVL = mutlIcons = createAvailable(2, 5)
+    tomoAVL = createAvailable(2, 3)
+    ESAVL = createAvailable(2, 2)
+    iconAVL = AWSAVL = createAvailable(2, 6)
+    fpdAVL = fpdOptAVL = createAvailable(2, 8)
 
-    while isRunning:
-        if offlineMode:
-            select = offlineMenu()
-            if select == '1':
-                mouseMenu()
-                mouseOptions()
-            elif select == '2':
-                getTestSS()
-            elif select == '0':
-                print("\nFINISHING...")
-                isRunning = False
-                return
+    try:
+        global isRunning
+        # use threading for SERIAL COMMUNICATION WITH ARDUINO
+        serialThread = threading.Thread(target=startListening)
+        serialThread.start()
 
-        else:
-            if getSerialError():
-                print(' ** Verify connection with handswitch emulator **')
-                break
-            select = mainMenu()
-            if select == '1':  # HandSwitch with Timer
-                isSelected = True
+        while isRunning:
+            # main Menu level
+            mainSelect = input(menu.main())
+            os.system('cls')
+            if mainSelect not in mainAVL:
+                continue
+
+            subSelect = ''
+            if mainSelect == '2':
+                while subSelect != '1':
+                    subSelect = input(menu.basic())
+                    os.system('cls')
+                    if subSelect not in basicAVL:
+                        continue
+                    menu.runBasic(subSelect)
+
+            if mainSelect == '3':
+                while subSelect != '1':
+                    subSelect = input(menu.stereoBpy())
+                    os.system('cls')
+                    if subSelect not in stereoAVL:
+                        continue
+                    menu.runStereo(subSelect)
+
+            if mainSelect == '4':
+                while subSelect != '1':
+                    subSelect = input(menu.tomo())
+                    os.system('cls')
+                    if subSelect not in tomoAVL:
+                        continue
+                    menu.runTomo(subSelect)
+
+            if mainSelect == '5':
+                while subSelect != '1':
+                    subSelect = input(menu.ES())
+                    os.system('cls')
+                    if subSelect not in ESAVL:
+                        continue
+                    menu.runES(subSelect)
+
+            if mainSelect == '6':
+                mAFullCalibration()
                 os.system('cls')
-                while isSelected:
-                    handswitchMenu()
-                    isSelected = handswitchSelection()
-            elif select == '2':  # Mouse
-                isSelected = True
-                os.system('cls')
-                while isSelected:
-                    mouseMenu()
-                    isSelected = mouseOptions()
-            elif select == '3':  # HSS+M
-                os.system('cls')
-                # TODO
-                print('NOT IMPLEMENTED YET')
-                return
-                handswitchMenu()
-                handswitchSelection(mouse=True)
-            elif select == '4':
-                os.system('cls')
-                getTestSS()
-            elif select == '0':
-                os.system('cls')
-                isRunning = False
-                error()
-                endListening() if getOfflineMode() else 0
-            else:
-                os.system('cls')
+
+            if mainSelect == '7':
+                finalSelect = ''
+                while subSelect != '1':
+                    subSelect = input(menu.iconTest())
+                    os.system('cls')
+                    if subSelect not in iconAVL:
+                        continue
+
+                    if subSelect == '2':
+                        while finalSelect != '1':
+                            finalSelect = input(menu.AWSicons())
+                            os.system('cls')
+                            if finalSelect not in AWSAVL:
+                                continue
+                            x, y = menu.runAWS(finalSelect)
+                            if x > 0 and y > 0:
+                                pyautogui.moveTo(x, y, duration=0.5)
+
+                    if subSelect == '3':
+                        while finalSelect != '1':
+                            finalSelect = input(menu.ruIcons())
+                            os.system('cls')
+                            if finalSelect not in ruIconsAVL:
+                                continue
+                            x, y = menu.runRuIcons(finalSelect)
+                            if x > 0 and y > 0:
+                                pyautogui.moveTo(x, y, duration=0.5)
+
+                    if subSelect == '4':
+                        while finalSelect != '1':
+                            finalSelect = input(menu.mutlIcons())
+                            os.system('cls')
+                            if finalSelect not in mutlIcons:
+                                continue
+                            x, y = menu.runMutl(finalSelect)
+                            if x > 0 and y > 0:
+                                pyautogui.moveTo(x, y, duration=0.5)
+
+                    if subSelect == '5':
+                        while finalSelect != '1':
+                            finalSelect = input(menu.fpdCalib())
+                            os.system('cls')
+                            if finalSelect not in fpdAVL:
+                                continue
+                            x, y = menu.runfpdCalib(finalSelect)
+                            if x > 0 and y > 0:
+                                pyautogui.moveTo(x, y, duration=0.5)
+
+                    if subSelect == '6':
+                        while finalSelect != '1':
+                            finalSelect = input(menu.fpdOptional())
+                            os.system('cls')
+                            if finalSelect not in fpdOptAVL:
+                                continue
+                            x, y = menu.runOptionalCalib(finalSelect)
+                            if x > 0 and y > 0:
+                                pyautogui.moveTo(x, y, duration=0.5)
+
+        error()
+    except KeyboardInterrupt:
+        isRunning = False
+        print('Closing...')
+
+
 # ------------------------------------------- MAIN -------------------------------------------------
 
 
 if __name__ == '__main__':
+    print('Opening serial port...', end='')
     main()

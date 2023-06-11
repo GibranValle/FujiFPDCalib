@@ -1,101 +1,137 @@
 import time
 
-from util.location import isBlocked, isStandby, isExposing
+from util.location import blockedIcon, stdbyIcon, isExposing
 
 
-def clearLine():
-    print('\r                                                                                 ', end='\r')
+def createText(msg, count):
+    minutes = count // 60
+    secs = count % 60
+    text = f'\r{msg}: {secs}s' if minutes <= 0 else f'\r{msg}: {minutes}m {secs}s'
+    return text
+
+
+def waitTillEnd(init, final):
+    """
+    Delay of n secs until blocked icon is displayed on screen.
+    :param init: initial count in secs
+    :param final: final count in secs
+    :return: breaks if icon is found
+    """
+    minTime = 3
+    secsPassed = 0
+    print('\r(Ctrl + C to abort) Waiting for exposure end: 0s', end='')
+    try:
+        for c in range(init, final + 1):
+            time.sleep(1)
+            secsPassed += 1
+            text = createText('(Ctrl + C to abort) Waiting for exposure end', secsPassed)
+            if (isBlocked() and c >= minTime) or c == final:
+                print(text)
+                break
+            print(text, end='')
+        return secsPassed
+    except KeyboardInterrupt:
+        text = createText('(User interrupted!) Waited for exposure end', secsPassed)
+        print(text)
+        return secsPassed
+
+
+def waitTillReady(init, final):
+    """
+    Delay of n secs until standby icon is displayed on screen.
+    :param init: initial count in secs
+    :param final: final count in secs
+    :return: breaks if icon is found
+    """
+    minTime = 10
+    secsPassed = 0
+    print('\r(Ctrl + C to abort) Waiting for next exposure: 0s', end='')
+    try:
+        for c in range(init, final + 1):
+            time.sleep(1)
+            secsPassed += 1
+            text = createText('(Ctrl + C to abort) Waiting for next exposure', secsPassed)
+            if (isBlocked() and c >= minTime) or c == final:
+                print(text)
+                break
+            print(text, end='')
+        return secsPassed
+    except KeyboardInterrupt:
+        text = createText('(User interrupted!) Waited for next exposure', secsPassed)
+        print(text)
+        return secsPassed
+
+
+def waitTillEndYellow(final, init):
+    """
+    Delay of n secs until blocked icon is displayed on screen, reverse count
+    :param init: initial count in secs
+    :param final: final count in secs
+    :return: breaks if icon is found
+    """
+    minTime = 60*10
+    secsPassed = 0
+    print('\r(Ctrl + C to abort) Waiting for exposure end: 0s', end='')
+    try:
+        for c in range(init, final - 1):
+            time.sleep(1)
+            secsPassed += 1
+            text = createText('(Ctrl + C to abort) Waiting for exposure end', secsPassed)
+            if (isExposureDone() and c >= minTime) or c == final:
+                print(text)
+                break
+            print(text, end='')
+        return secsPassed
+    except KeyboardInterrupt:
+        text = createText('(User interrupted!) Waited for exposure end', secsPassed)
+        print(text)
+        return secsPassed
 
 
 def keyboardDelay(init, final, message):
-    try:
-        count = range(init, final + 1)
-        if init > final:
-            count = range(init, final, -1)
-        passed = 0
-        for c in count:
-            passed += 1
-            minutes = int(c/60)
-            secs = c % 60
-            text = f'\r* PRESS CTRL + C TO ABORT * | {message} {secs}s'
-            if minutes >= 1:
-                text = f'\r* PRESS CTRL + C TO ABORT * | {message} {minutes}m {secs}s'
-            clearLine()
-            print(text, end='')
-            time.sleep(1)
-        minutes = int(passed / 60)
-        secs = passed % 60
-        clearLine()
-        text = f'\rTime waited: {secs}s'
-        if minutes >= 1:
-            text = f'\rTime waited: {minutes}m {secs}s'
-        print(text)
-    except KeyboardInterrupt:
-        clearLine()
-        print('\r....SKIPPING COUNTDOWN....', end=' ')
-        minutes = int(passed / 60)
-        secs = passed % 60
-        text = f'Time waited: {secs}s'
-        if minutes >= 1:
-            text = f'Time waited: {minutes}m {secs}s'
-        print(text)
-        return
-
-
-def setSSDelay(init, final, standByWanted):
     passed = 0
     try:
         count = range(init, final + 1)
         if init > final:
             count = range(init, final, -1)
-        for c in count:
-            time.sleep(1)
+        for _ in count:
             passed += 1
-            minutes = int(c/60)
-            secs = c % 60
-            text = f'* PRESS CTRL + C TO ABORT * | {secs}s'
-            if minutes >= 1:
-                text = f'* PRESS CTRL + C TO ABORT * |{minutes}m {secs}s'
-            if standByWanted:
-                status = '✓' if isStandby() else '⤫'
-                text += f' Ready for exposure: {status}'
-                if status:
-                    break
-            else:
-                status = isBlocked()
-                text += f' Exposure finished: {status}'
-                if status:
-                    break
-            print(f'\r{text}', end='')
-
-        minutes = int(passed / 60)
-        secs = passed % 60
-        text = f'{secs}s'
-        if minutes >= 1:
-            text = f'{minutes}m {secs}s'
+            text = createText(f'* PRESS CTRL + C TO ABORT | {message} ', passed)
+            clearLine()
+            print(text, end='')
+            time.sleep(1)
         clearLine()
-        if not standByWanted:
-            print('Time under exposure: ', text)
-        else:
-            print('Time waiting for next exposure: ', text)
+        text = createText('Time waited', passed)
+        print(text)
+        return passed
     except KeyboardInterrupt:
         clearLine()
-        print('....SKIPPING COUNTDOWN....', end=' ')
-        minutes = int(passed / 60)
-        secs = passed % 60
-        text = f'{secs}s'
-        if minutes >= 1:
-            text = f'{minutes}m {secs}s'
-        if not standByWanted:
-            print('Time under exposure: ', text)
-        else:
-            print('Time waiting for next exposure: ', text)
+        print('\r....SKIPPING COUNTDOWN....', end=' ')
+        text = createText('Time waited', passed)
+        print(text)
         return
 
 
-def waitForExposureReadySS(init, final):
-    setSSDelay(init, final, standByWanted=True)
+def clearLine():
+    print('\r                                                                                     ', end='\r')
 
 
-def waitForExposureEndSS(init, final):
-    setSSDelay(init, final, standByWanted=False)
+def isStdBy():
+    x, y = stdbyIcon()
+    if x > 0 and y > 0:
+        return True
+    return False
+
+
+def isBlocked():
+    x, y = blockedIcon()
+    if x > 0 and y > 0:
+        return True
+    return False
+
+
+def isExposureDone():
+    x, y = isExposing()
+    if x > 0 and y > 0:
+        return False
+    return True
