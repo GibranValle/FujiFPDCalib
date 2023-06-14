@@ -33,16 +33,7 @@ def createAvailable(init, final):
 
 
 # ------------------------------------------- MAIN -------------------------------------------------
-
-
 def main():
-    mainAVL = createAvailable(2, 9)
-    basicAVL = stereoAVL = ruIconsAVL = mutlIcons = createAvailable(2, 5)
-    tomoAVL = createAvailable(2, 3)
-    ESAVL = createAvailable(2, 2)
-    iconAVL = AWSAVL = createAvailable(2, 6)
-    fpdAVL = fpdOptAVL = createAvailable(2, 8)
-
     try:
         global isRunning
         # use threading for SERIAL COMMUNICATION WITH ARDUINO
@@ -53,103 +44,131 @@ def main():
             # main Menu level
             mainSelect = input(menu.main())
             os.system('cls')
-            if mainSelect not in mainAVL:
-                continue
+            if mainSelect == '1':
+                isRunning = False
 
-            subSelect = ''
-            if mainSelect == '2':
-                while subSelect != '1':
+            elif mainSelect == '2':
+                while True:
                     subSelect = input(menu.basic())
                     os.system('cls')
-                    if subSelect not in basicAVL:
-                        continue
-                    menu.runBasic(subSelect)
+                    if menu.runBasic(subSelect) == -1:
+                        break
 
-            if mainSelect == '3':
-                while subSelect != '1':
+            elif mainSelect == '3':
+                while True:
                     subSelect = input(menu.stereoBpy())
                     os.system('cls')
-                    if subSelect not in stereoAVL:
-                        continue
-                    menu.runStereo(subSelect)
+                    if menu.runStereo(subSelect) == -1:
+                        break
 
-            if mainSelect == '4':
-                while subSelect != '1':
+            elif mainSelect == '4':
+                while True:
                     subSelect = input(menu.tomo())
                     os.system('cls')
-                    if subSelect not in tomoAVL:
-                        continue
-                    menu.runTomo(subSelect)
+                    if menu.runTomo(subSelect) == -1:
+                        break
 
-            if mainSelect == '5':
-                while subSelect != '1':
+            elif mainSelect == '5':
+                while True:
                     subSelect = input(menu.ES())
                     os.system('cls')
-                    if subSelect not in ESAVL:
-                        continue
-                    menu.runES(subSelect)
+                    if menu.runES(subSelect) == -1:
+                        break
 
-            if mainSelect == '6':
+            elif mainSelect == '6':
                 mAFullCalibration()
                 os.system('cls')
 
-            if mainSelect == '7':
-                finalSelect = ''
-                while subSelect != '1':
+            elif mainSelect == '7':
+                while True:
                     subSelect = input(menu.iconTest())
                     os.system('cls')
-                    if subSelect not in iconAVL:
-                        continue
-
-                    if subSelect == '2':
-                        while finalSelect != '1':
+                    if subSelect == '1':
+                        break
+                    elif subSelect == '2':
+                        while True:
                             finalSelect = input(menu.AWSicons())
                             os.system('cls')
-                            if finalSelect not in AWSAVL:
-                                continue
+                            if not (2 <= int(finalSelect) <= 6):
+                                break
                             x, y = menu.runAWS(finalSelect)
                             if x > 0 and y > 0:
+                                print('MOVING CURSOR.... PLEASE WAIT')
                                 pyautogui.moveTo(x, y, duration=0.5)
+                                os.system('cls')
+                            else:
+                                print('Icon not found')
+                                continue
 
-                    if subSelect == '3':
-                        while finalSelect != '1':
+                    elif subSelect == '3':
+                        while True:
                             finalSelect = input(menu.ruIcons())
                             os.system('cls')
-                            if finalSelect not in ruIconsAVL:
-                                continue
+                            if not (2 <= int(finalSelect) <= 5):
+                                break
                             x, y = menu.runRuIcons(finalSelect)
                             if x > 0 and y > 0:
+                                print('MOVING CURSOR.... PLEASE WAIT')
                                 pyautogui.moveTo(x, y, duration=0.5)
+                                os.system('cls')
+                            else:
+                                print('Icon not found')
+                                continue
 
-                    if subSelect == '4':
-                        while finalSelect != '1':
+                    elif subSelect == '4':
+                        while True:
                             finalSelect = input(menu.mutlIcons())
                             os.system('cls')
-                            if finalSelect not in mutlIcons:
-                                continue
+                            if not (2 <= int(finalSelect) <= 5):
+                                break
                             x, y = menu.runMutl(finalSelect)
                             if x > 0 and y > 0:
+                                print('MOVING CURSOR.... PLEASE WAIT')
                                 pyautogui.moveTo(x, y, duration=0.5)
+                                os.system('cls')
+                            else:
+                                print('Icon not found')
+                                continue
 
-                    if subSelect == '5':
-                        while finalSelect != '1':
+                    elif subSelect == '5':
+                        while True:
                             finalSelect = input(menu.fpdCalib())
                             os.system('cls')
-                            if finalSelect not in fpdAVL:
-                                continue
+                            if not (2 <= int(finalSelect) <= 8):
+                                break
                             x, y = menu.runfpdCalib(finalSelect)
                             if x > 0 and y > 0:
+                                print('MOVING CURSOR.... PLEASE WAIT')
                                 pyautogui.moveTo(x, y, duration=0.5)
+                                os.system('cls')
+                            else:
+                                print('Icon not found')
+                                continue
 
-                    if subSelect == '6':
-                        while finalSelect != '1':
+                    elif subSelect == '6':
+                        while True:
                             finalSelect = input(menu.fpdOptional())
                             os.system('cls')
-                            if finalSelect not in fpdOptAVL:
-                                continue
+                            if not (2 <= int(finalSelect) <= 8):
+                                break
                             x, y = menu.runOptionalCalib(finalSelect)
                             if x > 0 and y > 0:
+                                print('MOVING CURSOR.... PLEASE WAIT')
                                 pyautogui.moveTo(x, y, duration=0.5)
+                                os.system('cls')
+                            else:
+                                print('Icon not found')
+                                continue
+            elif mainSelect == '8':
+                while True:
+                    0
+
+            elif mainSelect == '9':
+                while True:
+                    subSelect = input(menu.window())
+                    os.system('cls')
+                    if menu.runWindow(subSelect) == -1:
+                        break
 
         error()
     except KeyboardInterrupt:

@@ -4,8 +4,7 @@ from calibrations.exposureCalibration import defectSolidCalib, pixedDefectCalib,
     defectSolidStereoCalib, defectSolidTomoCalib, defectSolidBpyCalib, uniformityCalibStereo, uniformityCalibBpy, \
     uniformityCalibTomo, uniformityCalibES
 import util.location as loc
-from util.macros import startMouseCalib
-from util.mouseKeyboard import openRequest, closeRequest
+import shell.process as pro
 
 
 def generateMenu(options):
@@ -32,6 +31,7 @@ def main():
         'mA full Calibration',
         'IconLocation[Test]',
         'Automatic HS',
+        'Window',
         'selection: '
     ]
     return generateMenu(options)
@@ -51,7 +51,9 @@ def basic():
 
 
 def runBasic(option):
-    if option == '2':
+    if option == '1':
+        return -1
+    elif option == '2':
         defectSolidCalib()
     elif option == '3':
         pixedDefectCalib()
@@ -134,7 +136,7 @@ def iconTest():
         'RUPCTools icons',
         'MUTL icons',
         'FPD Calib icons',
-        'FPD Calib Opt icons'
+        'FPD Calib Opt icons',
         'selection: '
     ]
     return generateMenu(options)
@@ -166,7 +168,8 @@ def runAWS(option):
     elif option == '6':
         return loc.fieldCalib()
     else:
-        return
+        return print('Option not found')
+
 
 
 def ruIcons():
@@ -192,7 +195,7 @@ def runRuIcons(option):
     elif option == '5':
         return loc.install()
     else:
-        return
+        return -1, -1
 
 
 def mutlIcons():
@@ -218,7 +221,7 @@ def runMutl(option):
     elif option == '5':
         return loc.right()
     else:
-        return
+        return -1, -1
 
 
 def fpdCalib():
@@ -253,7 +256,7 @@ def runfpdCalib(option):
     elif option == '8':
         return loc.sensitivity()
     else:
-        return
+        return -1, -1
 
 
 def fpdOptional():
@@ -288,4 +291,30 @@ def runOptionalCalib(option):
     elif option == '8':
         return loc.uniformityES()
     else:
-        return
+        return -2, -2
+
+
+def window():
+    options = [
+        'Window options:',
+        'RETURN TO MAIN MENU',
+        'open MU',
+        'close MU',
+        'open MCU',
+        'close MCU',
+        'selection: '
+    ]
+    return generateMenu(options)
+
+
+def runWindow(option):
+    if option == '1':
+        return -1
+    elif option == '2':
+        return pro.openMU()
+    elif option == '3':
+        return pro.closeMU()
+    elif option == '4':
+        return pro.openMCU()
+    elif option == '5':
+        return pro.closeMCU()

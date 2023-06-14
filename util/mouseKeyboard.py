@@ -6,8 +6,7 @@ from pyautogui import moveTo
 from calibrations.variables import CALIB_FPD, OFFSET, DEFECT, FIELD_CALIBRATION, MUTL_CALIBRATION, RIGHT_OPTIONS, \
     LEFT_OPTIONS, MUTL_CALIBRATION_CLOSE, DEFECT_SOLID, PIXEL_DEFECT, SHADING, UNIFORMITY, RUPCTOOL_DIR, RUPCTOOL_EXE, \
     RUPCTOOL_CLOSE, MCU0, MUTL
-from shell.processRunning import process_exists
-from shell.activeWindow import getWindowName
+from shell.process import process_exists
 _TYPES = Literal["RUPCTOOLS", "MUTL"]
 
 
@@ -41,6 +40,7 @@ def startFDPOptionCalib():
     moveCursorAndClick(FIELD_CALIBRATION)
 
 
+"""
 def look4Window(windowName):
     index = getWindowName().find(windowName)
     i = 0
@@ -143,3 +143,4 @@ def clickShadingCalibration():
 def clickUniformityCalibration():
     moveCursorAndClick(UNIFORMITY)
     startFDPOptionCalib()
+"""

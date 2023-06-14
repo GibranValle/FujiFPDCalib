@@ -1,7 +1,6 @@
 import time
 
 from util.delayManager import waitTillEnd, waitTillReady, createText
-from util.macros import startMouseCalib
 from util.serialCOM import communicate
 
 
@@ -20,7 +19,7 @@ def genericCalibration(name, exposures, mouse, duration=9, pause=30):
     totaltime = 0
     print(f'{exposures} total exposures needed')
     if mouse:
-        startMouseCalib(name)
+        0
 
     if mouse:  # wait 500 secs OR wait SS
         print('WAITING FOR READY SIGNAL...')
