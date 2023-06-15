@@ -2,11 +2,12 @@ import pyautogui
 import os
 
 path = os.getcwd()
-confidence = 0.9
 
 
 def genericCoordinates(name):
-    global confidence
+    confidence = 0.9
+    if name == 'mutl/calibration_s':
+        confidence = 0.55
     x, y = -1, -1
     try:
         x, y = pyautogui.locateCenterOnScreen(f'{path}/img/{name}.png', confidence=confidence)
@@ -44,11 +45,29 @@ def fieldCalib():
 
 # RUPCTOOL SCREEN
 def MU0():
-    return genericCoordinates('ru/MU0')
+    x, y = genericCoordinates('ru/MU0')
+    x1, y1 = genericCoordinates('ru/MU0_S')
+    if x > 0 and y > 0:
+        return x, y
+    if x1 > 0 and y1 > 0:
+        return x1, y1
+    else:
+        return -1, -1
 
 
 def MCU0():
-    return genericCoordinates('ru/MCU0')
+    x, y = genericCoordinates('ru/MCU0')
+    x1, y1 = genericCoordinates('ru/MCU0_S')
+    if x > 0 and y > 0:
+        return x, y
+    if x1 > 0 and y1 > 0:
+        return x1, y1
+    else:
+        return -1, -1
+
+
+def mutl():
+    return genericCoordinates('ru/mutl')
 
 
 def new():
@@ -61,11 +80,27 @@ def install():
 
 # MUTL
 def calibration():
-    return genericCoordinates('mutl/calibration')
+    x, y = genericCoordinates('mutl/calibration')
+    x1, y1 = genericCoordinates('mutl/calibration_s')
+    print(x, x1, y, y1)
+    if x > 0 and y > 0:
+        return x, y
+    if x1 > 0 and y1 > 0:
+        return x1, y1
+    else:
+        return -1, -1
 
 
 def calibrationOptional():
-    return genericCoordinates('mutl/calibration_option')
+    x, y = genericCoordinates('mutl/calibration_option')
+    x1, y1 = genericCoordinates('mutl/calibration_option_s')
+    print(x, x1, y, y1)
+    if x > 0 and y > 0:
+        return x, y
+    if x1 > 0 and y1 > 0:
+        return x1, y1
+    else:
+        return -1, -1
 
 
 def left():

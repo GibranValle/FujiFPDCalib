@@ -2,12 +2,15 @@
 # final modification @ 27/03/2023
 import os
 import threading
+import time
+
 import pyautogui
 from calibrations.maFullCalib import mAFullCalibration
 import util.menus as menu
 from util.serialCOM import startListening, endListening, communicate
 isRunning = True
 offlineMode = False
+import shell.process as pro
 
 
 def error():
@@ -170,6 +173,12 @@ def main():
                     if menu.runWindow(subSelect) == -1:
                         break
 
+            elif mainSelect == '10':
+                print('Please disconnect PACS ethernet cable')
+                pro.saveMACs()
+                time.sleep(1)
+                print('File created successfully!')
+
         error()
     except KeyboardInterrupt:
         isRunning = False
@@ -180,5 +189,5 @@ def main():
 
 
 if __name__ == '__main__':
-    print('Opening serial port...', end='')
+    print('Opening serial port...')
     main()
