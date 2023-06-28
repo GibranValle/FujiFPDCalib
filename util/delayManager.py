@@ -25,7 +25,7 @@ def waitTillEnd(init, final):
             time.sleep(1)
             secsPassed += 1
             text = createText('(Ctrl + C to abort) Waiting for exposure end', secsPassed)
-            if (isStdBy() and c >= minTime) or c == final:
+            if (isBlocked() and c >= minTime) or c == final:
                 print(text)
                 break
             print(text, end='')
@@ -51,7 +51,7 @@ def waitTillReady(init, final):
             time.sleep(1)
             secsPassed += 1
             text = createText('(Ctrl + C to abort) Waiting for next exposure', secsPassed)
-            if (isBlocked() and c >= minTime) or c == final:
+            if (isStdBy() and c >= minTime) or c == final:
                 print(text)
                 break
             print(text, end='')
@@ -113,7 +113,7 @@ def keyboardDelay(init, final, message):
 
 
 def clearLine():
-    print('\r                                                                                     ', end='\r')
+    print('\r                                                                                       ', end='\r')
 
 
 def isStdBy():

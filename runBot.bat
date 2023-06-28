@@ -1,2 +1,0 @@
-python calibrationBot.py
-pause

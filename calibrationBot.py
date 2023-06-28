@@ -174,9 +174,7 @@ def main():
                         break
 
             elif mainSelect == '10':
-                print('Please disconnect PACS ethernet cable')
                 pro.saveMACs()
-                time.sleep(1)
                 print('File created successfully!')
 
         error()

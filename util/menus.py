@@ -32,7 +32,7 @@ def main():
         'IconLocation[Test]',
         'Automatic HS',
         'Window',
-        'Save MAC list',
+        'Save MACs',
         'selection: '
     ]
     return generateMenu(options)
@@ -301,9 +301,9 @@ def window():
         'RETURN TO MAIN MENU',
         'open RU',
         'close RU',
-        'open MCU [MOUSE]',
-        'open MCU [IN DEVELOPMENT]',
-        'close MCU',
+        'open MU',
+        'open MCU',
+        'close MUTL',
         'open calibration menu [MOUSE]',
         'open calibration (optional) menu [MOUSE]',
         'Start Shading calibration [Mouse]',
@@ -321,18 +321,18 @@ def runWindow(option):
     elif option == '3':
         return pro.closeRU()
     elif option == '4':
-        return pro.openMUTLMouse()
+        return pro.openMUTLMU()
+    elif option == '5':
+        return pro.openMUTLMCU()
     elif option == '6':
         return pro.closeMUTL()
     elif option == '7':
-        return pro.closeMUTL()
-    elif option == '8':
         return pro.openCalibrationMenuMouse()
-    elif option == '9':
+    elif option == '8':
         return pro.openCalibrationOptionalMenuMouse()
-    elif option == '10':
+    elif option == '9':
         return pro.startShadingCalib()
-    elif option == '11':
+    elif option == '10':
         return pro.startUniformityCalib()
     else:
         return -1

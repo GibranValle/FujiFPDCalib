@@ -13,8 +13,6 @@ except any:
 
 try:
     copyfile(f'{path}/setup.ini', f'{path}/dist/setup.ini')
-    copytree(f'{path}/img', f'{path}/dist/img', ignore=ignore_patterns('*.pyc', 'tmp*'))
-    copyfile(f'{path}/setup.ini', f'{path}/dist/setup.ini')
     copytree(f'{path}/img/aws', f'{path}/dist/img/aws', ignore=ignore_patterns('*.pyc', 'tmp*'))
     copytree(f'{path}/img/ff', f'{path}/dist/img/ff', ignore=ignore_patterns('*.pyc', 'tmp*'))
     copytree(f'{path}/img/mutl', f'{path}/dist/img/mutl', ignore=ignore_patterns('*.pyc', 'tmp*'))
